@@ -413,14 +413,24 @@
         }
 
         function fetchUpdateLog() {
-    // Đã thay link GitHub của ông vào đây:
-    const logUrl = "https://raw.githubusercontent.com/KHACK54321/AX-Project/refs/heads/main/updatelog.txt?v=" + new Date().getTime(); 
-    
-    fetch(logUrl)
-        .then(response => { if (!response.ok) throw new Error(""); return response.text(); })
-        .then(text => { document.getElementById("update-log-box").innerText = text; })
-        .catch(err => { document.getElementById("update-log-box").innerText = "Đang chờ cập nhật nhật ký hệ thống..."; });
-}
+            // Đã sửa lại link chuẩn chỉnh nhất cho ông
+            const logUrl = "https://raw.githubusercontent.com/KHACK54321/AX-Project/main/updatelog.txt?v=" + new Date().getTime(); 
+            
+            let logBox = document.getElementById("update-log-box");
+            logBox.innerText = "Đang kết nối tải Log...";
+
+            fetch(logUrl)
+                .then(response => { 
+                    if (!response.ok) throw new Error("Lỗi HTTP: " + response.status); 
+                    return response.text(); 
+                })
+                .then(text => { 
+                    logBox.innerText = text; 
+                })
+                .catch(err => { 
+                    logBox.innerText = "[LỖI] Không thể lấy Log.\n1. Kiểm tra lại xem Repo đã để Public chưa?\n2. File updatelog.txt có viết đúng chữ thường 100% không?\nChi tiết lỗi: " + err.message; 
+                });
+        }
     </script>
 </body>
 </html>
