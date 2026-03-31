@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Waifu Cultivation System - Ultimate Edition</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&family=Inter:wght@300;400;600&display=swap');
+
+        /* Tối ưu triệt để cho màn hình điện thoại (Oppo A57) */
+        body, html {
+            margin: 0; padding: 0; 
+            width: 100vw; height: 100vh; 
+            font-family: 'Inter', sans-serif;
+            color: #f0f0f0; 
+            background-color: #050505; 
+            overflow: hidden;
+        }
+
+        /* Màn hình Load */
+        #loader {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: 9999; display: flex; justify-content: center; align-items: center;
+            flex-direction: column; transition: opacity 0.8s ease;
+            background-color: #000; background-size: cover; background-position: center;
+            box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.85);
+        }
+        
+        #loader .avatar-container { width: 150px; height: 150px; position: relative; margin-bottom: 20px; }
+        #loader .rotating-avatar {
+            width: 100%; height: 100%; border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.2);
+            animation: spin 3s linear infinite; object-fit: cover;
+        }
+
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        #loader #hacker-log {
+            font-family: 'Courier Prime', monospace; font-size: 14px;
+            color: rgba(255, 255, 255, 0.6); text-align: left;
+            width: 80%; max-width: 300px; height: 100px; overflow-y: hidden;
+            border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 10px;
+        }
+
+        /* Giao diện chính */
+        #main-app {
+            display: none; height: 100vh; width: 100vw;
+            background-size: cover; background-position: center;
+            box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.75);
+            display: flex; flex-direction: column;
+        }
+
+        .tab-bar {
+            display: flex; background: rgba(10, 10, 10, 0.8);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(5px); justify-content: space-around;
+        }
+
+        .tab-button {
+            flex: 1; text-align: center; background: none; color: #888;
+            border: none; padding: 15px 2px; font-family: inherit; 
+            font-size: 12px; font-weight: 600; cursor: pointer; 
+            transition: all 0.3s ease; text-transform: uppercase; 
+            border-bottom: 2px solid transparent;
+        }
+        .tab-button.active { color: #fff; border-bottom: 2px solid #fff; background: rgba(255, 255, 255, 0.03); }
+
+        .tab-container {
+            flex: 1; padding: 15px; box-sizing: border-box;
+            overflow-y: auto; display: flex; flex-direction: column; align-items: center;
+        }
+
+        .tab-content { display: none; width: 100%; max-width: 400px; padding-bottom: 20px; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card {
+            background: rgba(15, 15, 15, 0.65); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 16px;
+            padding: 20px; margin-bottom: 20px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        h2 { font-weight: 600; font-size: 16px; text-transform: uppercase; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; margin-top: 0; margin-bottom: 15px; color: #fff;}
+        h3 { font-size: 14px; color: #bbb; text-transform: uppercase; margin-top: 0; margin-bottom: 10px; }
+        
+        p { font-size: 14px; line-height: 1.5; color: #ccc; margin: 5px 0; }
+        strong { color: #fff; font-weight: 600; }
+        .realm-name-big { font-size: 22px; color: #fff; font-weight: 600; text-shadow: 0 0 10px rgba(255,255,255,0.3); }
+
+        /* Nhiệm vụ Item */
+        .task-row {
+            display: flex; justify-content: space-between; align-items: center;
+            background: rgba(255, 255, 255, 0.03); padding: 12px; 
+            border-radius: 8px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .task-info { display: flex; flex-direction: column; width: 65%; }
+        .task-title { font-size: 14px; color: #fff; font-weight: 600; margin-bottom: 3px; }
+        .task-prog { font-size: 12px; color: #aaa; }
+        .task-status-text { font-size: 12px; font-style: italic; color: #0f0; }
+
+        button.action-btn {
+            background: rgba(255, 255, 255, 0.08); color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.3); border-radius: 6px; 
+            padding: 8px 12px; font-family: inherit; font-size: 12px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease;
+        }
+        button.action-btn:hover { background: #fff; color: #000; }
+        button.action-btn:disabled { background: transparent; color: #555; border-color: rgba(255, 255, 255, 0.1); cursor: not-allowed; }
+        button.main-btn { width: 100%; padding: 12px; font-size: 14px; margin-top: 10px; text-transform: uppercase; }
+
+        .progress-bar { width: 100%; background: rgba(255, 255, 255, 0.05); border: 1px solid rgba(255, 255, 255, 0.1); height: 12px; border-radius: 20px; overflow: hidden; margin-top: 10px; }
+        .progress { height: 100%; background: #fff; width: 0%; box-shadow: 0 0 10px rgba(255, 255, 255, 0.5); transition: width 0.5s; border-radius: 20px; }
+
+        /* Khung Log & Backup */
+        .log-box { background: rgba(0,0,0,0.5); border: 1px solid #333; padding: 10px; border-radius: 8px; font-family: 'Courier Prime', monospace; font-size: 12px; color: #0f0; height: 150px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 10px;}
+        textarea.backup-area { width: 100%; height: 60px; background: rgba(0,0,0,0.5); color: #fff; border: 1px solid #555; border-radius: 6px; padding: 8px; font-size: 11px; box-sizing: border-box; margin-top: 10px; resize: none; }
+    </style>
+</head>
+<body>
+
+    <div id="loader">
+        <div class="avatar-container"><img src="image_4.png" class="rotating-avatar" alt="Avatar"></div>
+        <div id="hacker-log"></div>
+    </div>
+
+    <div id="main-app">
+        <div class="tab-bar">
+            <button class="tab-button active" onclick="showTab('tab-checkin', this)">Ký Danh</button>
+            <button class="tab-button" onclick="showTab('tab-tasks', this)">Nhiệm Vụ</button>
+            <button class="tab-button" onclick="showTab('tab-realm', this)">Tu Vi</button>
+            <button class="tab-button" onclick="showTab('tab-system', this)">Hệ Thống</button>
+        </div>
+
+        <div class="tab-container">
+            
+            <div id="tab-checkin" class="tab-content active">
+                <div class="card">
+                    <h2>Ký danh mỗi ngày</h2>
+                    <p style="font-size: 12px; color: #aaa;">Reset vào 00:00 hàng ngày.</p>
+                    <button id="btn-checkin" class="action-btn main-btn" onclick="dailyCheckIn()">Ký danh nhận thưởng</button>
+                    <p style="margin-top: 15px; font-size: 13px;">Đã ký danh: <strong id="consecutive-days">0</strong> ngày.</p>
+                </div>
+            </div>
+
+            <div id="tab-tasks" class="tab-content">
+                <div class="card">
+                    <h3>Nhiệm vụ Ngày</h3>
+                    
+                    <div class="task-row">
+                        <div class="task-info">
+                            <span class="task-title">Học 1 bài tập</span>
+                            <span class="task-prog">Thưởng: 50 Tu Vi</span>
+                        </div>
+                        <button id="btn-t1" class="action-btn" onclick="doTask(1)">Hoàn thành</button>
+                    </div>
+
+                    <div class="task-row">
+                        <div class="task-info">
+                            <span class="task-title">Học 2 bài tập</span>
+                            <span class="task-prog">Tiến độ: <span id="prog-t2">0</span>/2 | Thưởng: 80 Tu Vi</span>
+                        </div>
+                        <button id="btn-t2" class="action-btn" onclick="doTask(2)">+1 Bài</button>
+                    </div>
+
+                    <div class="task-row">
+                        <div class="task-info">
+                            <span class="task-title">Học 3 bài tập</span>
+                            <span class="task-prog">Tiến độ: <span id="prog-t3">0</span>/3 | Thưởng: 120 Tu Vi</span>
+                        </div>
+                        <button id="btn-t3" class="action-btn" onclick="doTask(3)">+1 Bài</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>Nhiệm vụ Tuần</h3>
+                    <p style="font-size: 11px; color: #888; margin-bottom: 10px;">Reset vào 00:00 Thứ Hai.</p>
+                    
+                    <div class="task-row">
+                        <div class="task-info">
+                            <span class="task-title">Chăm chỉ (15 NV Ngày)</span>
+                            <span class="task-prog">Tiến độ: <span id="prog-wt1">0</span>/15</span>
+                        </div>
+                        <span id="status-wt1" class="task-status-text">Chưa đạt</span>
+                    </div>
+
+                    <div class="task-row">
+                        <div class="task-info">
+                            <span class="task-title">Bền bỉ (Điểm danh 7 ngày)</span>
+                            <span class="task-prog">Tiến độ: <span id="prog-wt2">0</span>/7</span>
+                        </div>
+                        <span id="status-wt2" class="task-status-text">Chưa đạt</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-realm" class="tab-content">
+                <div class="card">
+                    <h2>Bản Tôn Tu Chân</h2>
+                    <p>Cảnh giới:</p>
+                    <p class="realm-name-big" id="realm-name">Ngưng Khí Tầng 1</p>
+                    <p><strong>Danh vọng:</strong> <span id="points">0</span> điểm</p>
+                    <p><strong>Tu Vi:</strong> <span id="exp">0</span> / <span id="max-exp">100</span></p>
+                    <div class="progress-bar"><div class="progress" id="exp-bar"></div></div>
+                </div>
+            </div>
+
+            <div id="tab-system" class="tab-content">
+                <div class="card">
+                    <h2>Nhật ký cập nhật (Log)</h2>
+                    <p style="font-size: 11px; color: #aaa;">Đồng bộ trực tiếp từ Github Repository.</p>
+                    <div class="log-box" id="update-log-box">Đang kết nối tới máy chủ đám mây...</div>
+                    <button class="action-btn main-btn" onclick="fetchUpdateLog()">Làm mới Log</button>
+                </div>
+
+                <div class="card">
+                    <h2>Lưu Trữ Dữ Liệu</h2>
+                    <p style="font-size: 12px;">Copy đoạn mã dưới đây cất vào Ghi chú. Khi cài lại app thì dán mã vào đây để phục hồi Tu Vi.</p>
+                    <textarea id="backup-code" class="backup-area" placeholder="Dán mã phục hồi vào đây..."></textarea>
+                    <div style="display: flex; gap: 10px; margin-top: 10px;">
+                        <button class="action-btn" style="flex: 1;" onclick="exportData()">Sao lưu</button>
+                        <button class="action-btn" style="flex: 1; background: rgba(255,0,0,0.2);" onclick="importData()">Phục hồi</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const waifuImages = ['image_0.png', 'image_1.png', 'image_2.png', 'image_3.png'];
+        const realms = [
+            { name: "Phàm Nhân", maxExp: 50 }, { name: "Ngưng Khí", maxExp: 150 },
+            { name: "Trúc Cơ", maxExp: 400 }, { name: "Kết Đan", maxExp: 1000 },
+            { name: "Nguyên Anh", maxExp: 2500 }, { name: "Hóa Thần", maxExp: 6000 },
+            { name: "Anh Biến", maxExp: 15000 }, { name: "Vấn Đỉnh Sơ Kỳ", maxExp: 30000 },
+            { name: "Vấn Đỉnh Trung Kỳ", maxExp: 50000 }, { name: "Vấn Đỉnh Hậu Kỳ", maxExp: 80000 },
+            { name: "Vấn Đỉnh Đại Viên Mãn", maxExp: 999999 }
+        ];
+
+        /* --- DỮ LIỆU --- */
+        let userData = { 
+            points: 0, exp: 0, realmIndex: 0, lastLoginDate: "", lastWeeklyResetDate: "", checkinStreak: 0,
+            dailyTasks: { t1: false, t2: 0, t3: 0 },
+            weeklyTasks: { dailyDone: 0, checkins: 0, rw1: false, rw2: false }
+        };
+
+        const logs = ["> Booting system...", "> Adjusting aspect ratio (20:9)...", "> Loading Task Modules...", "> Fetching Update Logs...", "> System Ready."];
+        let i = 0;
+
+        window.onload = () => {
+            const loader = document.getElementById("loader");
+            loader.style.backgroundImage = `url('${waifuImages[Math.floor(Math.random() * waifuImages.length)]}')`;
+            
+            function showLogs() {
+                if (i < logs.length) {
+                    document.getElementById("hacker-log").innerHTML += logs[i] + "<br>"; i++;
+                    setTimeout(showLogs, 400);
+                } else {
+                    setTimeout(() => {
+                        loader.style.opacity = "0";
+                        setTimeout(() => { loader.style.display = "none"; initApp(); }, 600);
+                    }, 800);
+                }
+            }
+            showLogs();
+        };
+
+        function initApp() {
+            document.getElementById("main-app").style.display = "flex";
+            document.getElementById("main-app").style.backgroundImage = `url('${waifuImages[Math.floor(Math.random() * waifuImages.length)]}')`;
+            loadData(); checkResets(); updateUI(); fetchUpdateLog();
+        }
+
+        function showTab(tabId, btn) {
+            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+            document.querySelectorAll('.tab-button').forEach(b => b.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active'); btn.classList.add('active');
+        }
+
+        /* --- XỬ LÝ LƯU & RESET --- */
+        function loadData() {
+            let saved = localStorage.getItem("OppoWaifuDataCloud");
+            if (saved) { userData = { ...userData, ...JSON.parse(saved) }; }
+        }
+        function saveData() { localStorage.setItem("OppoWaifuDataCloud", JSON.stringify(userData)); updateUI(); }
+
+        function getToday() { return new Date().toLocaleDateString('vi-VN'); }
+        function getMondayOfCurrentWeek() {
+            let d = new Date(); let day = d.getDay();
+            let diff = d.getDate() - day + (day === 0 ? -6 : 1); 
+            return new Date(d.setDate(diff)).toLocaleDateString('vi-VN');
+        }
+
+        function checkResets() {
+            let today = getToday();
+            let currentMonday = getMondayOfCurrentWeek();
+
+            // Reset Ngày
+            if (userData.lastLoginDate !== today && userData.lastLoginDate !== "") {
+                userData.dailyTasks = { t1: false, t2: 0, t3: 0 };
+            }
+
+            // Reset Tuần
+            if (userData.lastWeeklyResetDate !== currentMonday) {
+                userData.weeklyTasks = { dailyDone: 0, checkins: 0, rw1: false, rw2: false };
+                userData.lastWeeklyResetDate = currentMonday;
+                saveData();
+            }
+        }
+
+        /* --- LOGIC ĐIỂM DANH & NHIỆM VỤ --- */
+        function dailyCheckIn() {
+            userData.lastLoginDate = getToday();
+            userData.points += 1; userData.checkinStreak += 1;
+            userData.weeklyTasks.checkins += 1;
+            
+            addExp(20); checkWeeklyRewards(); saveData();
+            alert("✦ KÝ DANH THÀNH CÔNG ✦\n+1 Điểm\n+20 Tu Vi");
+        }
+
+        function doTask(type) {
+            userData.lastLoginDate = getToday(); // Cập nhật ngày để chống bug reset
+            if (type === 1) {
+                userData.dailyTasks.t1 = true; addExp(50); addWeeklyDailyProg();
+                alert("Hoàn thành 1 bài! +50 Tu Vi");
+            } 
+            else if (type === 2) {
+                userData.dailyTasks.t2 += 1;
+                if (userData.dailyTasks.t2 === 2) { addExp(80); addWeeklyDailyProg(); alert("Hoàn thành 2 bài! +80 Tu Vi"); }
+            } 
+            else if (type === 3) {
+                userData.dailyTasks.t3 += 1;
+                if (userData.dailyTasks.t3 === 3) { addExp(120); addWeeklyDailyProg(); alert("Hoàn thành 3 bài! +120 Tu Vi"); }
+            }
+            saveData();
+        }
+
+        function addWeeklyDailyProg() {
+            userData.weeklyTasks.dailyDone += 1;
+            checkWeeklyRewards();
+        }
+
+        function checkWeeklyRewards() {
+            if (userData.weeklyTasks.dailyDone >= 15 && !userData.weeklyTasks.rw1) {
+                userData.weeklyTasks.rw1 = true; addExp(500);
+                alert("✦ THÀNH TỰU TUẦN ✦\nĐã làm đủ 15 NV ngày! +500 Tu Vi");
+            }
+            if (userData.weeklyTasks.checkins >= 7 && !userData.weeklyTasks.rw2) {
+                userData.weeklyTasks.rw2 = true; addExp(300);
+                alert("✦ THÀNH TỰU TUẦN ✦\nĐiểm danh đủ 7 ngày! +300 Tu Vi");
+            }
+        }
+
+        function addExp(amount) {
+            if (userData.realmIndex >= realms.length - 1) return;
+            userData.exp += amount;
+            let cr = realms[userData.realmIndex];
+            if (userData.exp >= cr.maxExp) {
+                userData.exp -= cr.maxExp; userData.realmIndex++;
+                alert("✦ RẦM!!! ĐỘT PHÁ CẢNH GIỚI ✦\nTiến giai: " + realms[userData.realmIndex].name);
+            }
+        }
+
+        /* --- UPDATE GIAO DIỆN --- */
+        function updateUI() {
+            let btnCi = document.getElementById("btn-checkin");
+            if (userData.lastLoginDate === getToday()) {
+                btnCi.disabled = true; btnCi.innerText = "Đã điểm danh hôm nay";
+            } else { btnCi.disabled = false; btnCi.innerText = "Ký danh nhận thưởng"; }
+            document.getElementById("consecutive-days").innerText = userData.checkinStreak;
+
+            let bt1 = document.getElementById("btn-t1"), bt2 = document.getElementById("btn-t2"), bt3 = document.getElementById("btn-t3");
+            
+            if (userData.dailyTasks.t1) { bt1.disabled = true; bt1.innerText = "Đã xong"; } else { bt1.disabled = false; bt1.innerText = "Hoàn thành"; }
+            
+            document.getElementById("prog-t2").innerText = userData.dailyTasks.t2;
+            if (userData.dailyTasks.t2 >= 2) { bt2.disabled = true; bt2.innerText = "Đã xong"; } else { bt2.disabled = false; bt2.innerText = "+1 Bài"; }
+
+            document.getElementById("prog-t3").innerText = userData.dailyTasks.t3;
+            if (userData.dailyTasks.t3 >= 3) { bt3.disabled = true; bt3.innerText = "Đã xong"; } else { bt3.disabled = false; bt3.innerText = "+1 Bài"; }
+
+            document.getElementById("prog-wt1").innerText = userData.weeklyTasks.dailyDone;
+            document.getElementById("prog-wt2").innerText = userData.weeklyTasks.checkins;
+            document.getElementById("status-wt1").innerText = userData.weeklyTasks.rw1 ? "Đã nhận thưởng" : (userData.weeklyTasks.dailyDone >= 15 ? "Đã đạt" : "Chưa đạt");
+            document.getElementById("status-wt2").innerText = userData.weeklyTasks.rw2 ? "Đã nhận thưởng" : (userData.weeklyTasks.checkins >= 7 ? "Đã đạt" : "Chưa đạt");
+
+            let r = realms[userData.realmIndex];
+            document.getElementById("realm-name").innerText = r.name;
+            document.getElementById("points").innerText = userData.points;
+            if (userData.realmIndex >= realms.length - 1) {
+                document.getElementById("exp").innerText = "MAX"; document.getElementById("max-exp").innerText = "MAX";
+                document.getElementById("exp-bar").style.width = "100%";
+            } else {
+                document.getElementById("exp").innerText = userData.exp; document.getElementById("max-exp").innerText = r.maxExp;
+                document.getElementById("exp-bar").style.width = ((userData.exp / r.maxExp) * 100) + "%";
+            }
+        }
+
+        /* --- TÍNH NĂNG LOG & BACKUP --- */
+        function exportData() {
+            let encodedData = btoa(JSON.stringify(userData));
+            document.getElementById("backup-code").value = encodedData;
+            alert("Đã tạo mã sao lưu! Hãy Copy đoạn mã này cất vào chỗ an toàn.");
+        }
+        function importData() {
+            let code = document.getElementById("backup-code").value;
+            if (!code) { alert("Vui lòng dán mã vào ô!"); return; }
+            try {
+                userData = JSON.parse(atob(code)); saveData(); updateUI();
+                alert("Phục hồi Tu Vi thành công!");
+                document.getElementById("backup-code").value = "";
+            } catch(e) { alert("Mã không hợp lệ hoặc bị lỗi!"); }
+        }
+
+        function fetchUpdateLog() {
+            // Thay bằng link raw file updatelog.txt trên Github của ông
+            const logUrl = "https://raw.githubusercontent.com/username/repo/main/updatelog.txt?v=" + new Date().getTime(); 
+            fetch(logUrl)
+                .then(response => { if (!response.ok) throw new Error(""); return response.text(); })
+                .then(text => { document.getElementById("update-log-box").innerText = text; })
+                .catch(err => { document.getElementById("update-log-box").innerText = "Vui lòng lên GitHub tạo file updatelog.txt và dán link vào code để xem nhật ký cập nhật."; });
+        }
+    </script>
+</body>
+</html>
