@@ -119,7 +119,9 @@
 <body>
 
     <div id="loader">
-        <div class="avatar-container"><img src="image_4.png" class="rotating-avatar" alt="Avatar"></div>
+        <div class="avatar-container">
+            <img src="" class="rotating-avatar" id="loader-img" alt="Avatar">
+        </div>
         <div id="hacker-log"></div>
     </div>
 
@@ -227,7 +229,17 @@
     </div>
 
     <script>
+        // Mảng 4 ảnh anime mới để làm avatar xoay
+        const loadingAvatars = [
+            'image_4.jpg',
+            'image_5.jpg',
+            'image_6.jpg',
+            'image_7.png'
+        ];
+
+        // Mảng 4 ảnh nền chính (vẫn giữ như cũ)
         const waifuImages = ['image_0.png', 'image_1.png', 'image_2.png', 'image_3.png'];
+
         const realms = [
             { name: "Phàm Nhân", maxExp: 50 }, { name: "Ngưng Khí", maxExp: 150 },
             { name: "Trúc Cơ", maxExp: 400 }, { name: "Kết Đan", maxExp: 1000 },
@@ -244,10 +256,15 @@
             weeklyTasks: { dailyDone: 0, checkins: 0, rw1: false, rw2: false }
         };
 
-        const logs = ["> Booting system...", "> Adjusting aspect ratio (20:9)...", "> Loading Task Modules...", "> Fetching Update Logs...", "> System Ready."];
+        const logs = ["> Booting system...", "> Adjusting aspect ratio (20:9)...", "> Loading Task Modules...", "> Fetching Update Logs...", "> Randomizing Loader Avatar...", "> System Ready."];
         let i = 0;
 
         window.onload = () => {
+            // --- NEW: Chọn ngẫu nhiên 1 trong 4 avatar mới để xoay ---
+            const loaderImg = document.getElementById("loader-img");
+            loaderImg.src = loadingAvatars[Math.floor(Math.random() * loadingAvatars.length)];
+
+            // --- Giữ nguyên logic nền load hacker ---
             const loader = document.getElementById("loader");
             loader.style.backgroundImage = `url('${waifuImages[Math.floor(Math.random() * waifuImages.length)]}')`;
             
@@ -413,23 +430,12 @@
         }
 
         function fetchUpdateLog() {
-            // Đã sửa lại link chuẩn chỉnh nhất cho ông
-            const logUrl = "https://raw.githubusercontent.com/KHACK54321/AX-Project/main/updatelog.txt?v=" + new Date().getTime(); 
-            
-            let logBox = document.getElementById("update-log-box");
-            logBox.innerText = "Đang kết nối tải Log...";
-
+            // Thay link raw file updatelog.txt trên Github của ông
+            const logUrl = "https://raw.githubusercontent.com/KHACK54321/AX-Project/refs/heads/main/updatelog.txt?v=" + new Date().getTime(); 
             fetch(logUrl)
-                .then(response => { 
-                    if (!response.ok) throw new Error("Lỗi HTTP: " + response.status); 
-                    return response.text(); 
-                })
-                .then(text => { 
-                    logBox.innerText = text; 
-                })
-                .catch(err => { 
-                    logBox.innerText = "[LỖI] Không thể lấy Log.\n1. Kiểm tra lại xem Repo đã để Public chưa?\n2. File updatelog.txt có viết đúng chữ thường 100% không?\nChi tiết lỗi: " + err.message; 
-                });
+                .then(response => { if (!response.ok) throw new Error(""); return response.text(); })
+                .then(text => { document.getElementById("update-log-box").innerText = text; })
+                .catch(err => { document.getElementById("update-log-box").innerText = "Chưa có nhật ký cập nhật."; });
         }
     </script>
 </body>
