@@ -4,6 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hệ Thống Tu Chân - Pro Edition</title>
+    
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -548,6 +553,19 @@
     </div>
 
     <script>
+        let touchStartY = 0;
+        document.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+        }, { passive: false });
+
+        document.addEventListener('touchmove', function(e) {
+            let touchEndY = e.touches[0].clientY;
+            let tabContainer = document.querySelector('.tab-container');
+            if (touchEndY > touchStartY && tabContainer.scrollTop === 0) {
+                e.preventDefault(); 
+            }
+        }, { passive: false });
+        
         const loadingAvatars = ['img/image_4.png','img/image_5.png','img/image_6.png','img/image_7.png'];
         const waifuImages    = ['img/image_0.png','img/image_1.png','img/image_2.png','img/image_3.png'];
         const ICON_FIRE        = "img/image_fire1.png";
