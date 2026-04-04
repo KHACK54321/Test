@@ -5,126 +5,404 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Hệ Thống Tu Chân - Pro Edition</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&family=Inter:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&family=Inter:wght@300;400;500;600;700&display=swap');
 
         :root {
-            --bg-color: #09090b;
-            --card-bg: rgba(24, 24, 27, 0.75);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --text-main: #f4f4f5;
-            --text-muted: #a1a1aa;
-            --accent-color: #06b6d4; 
-            --accent-gradient: linear-gradient(135deg, #06b6d4, #3b82f6);
-            --danger-gradient: linear-gradient(135deg, #ef4444, #b91c1c);
-            --success-color: #10b981;
+            --bg: #050810;
+            --card-bg: rgba(15, 20, 35, 0.65);
+            --card-border: rgba(6, 182, 212, 0.15);
+            --card-border-top: rgba(6, 182, 212, 0.4);
+            --text-main: #e2e8f6;
+            --text-muted: #8b9bb4;
+            --cyan: #00d2ff;
+            --gold: #fbbf24;
+            --purple: #9d4edd;
+            --green: #10b981;
+            --accent-gradient: linear-gradient(135deg, #00d2ff 0%, #3a7bd5 100%);
+            --danger-gradient: linear-gradient(135deg, #ef4444, #991b1b);
+            --success: #10b981;
         }
 
-        body, html { margin: 0; padding: 0; width: 100vw; height: 100vh; font-family: 'Inter', sans-serif; color: var(--text-main); background-color: var(--bg-color); overflow: hidden; }
+        *, *::before, *::after { box-sizing: border-box; }
 
-        /* --- MÀN HÌNH LOAD --- */
-        #loader { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 9999; display: flex; justify-content: center; align-items: center; flex-direction: column; transition: opacity 0.8s ease; background-color: #000; background-size: cover; background-position: center; box-shadow: inset 0 0 0 2000px rgba(0, 0, 0, 0.85); }
-        #loader .avatar-container { width: 150px; height: 150px; position: relative; margin-bottom: 20px; }
-        #loader .rotating-avatar { width: 100%; height: 100%; border-radius: 50%; border: 4px solid rgba(255, 255, 255, 0.2); animation: spin 3s linear infinite; object-fit: cover; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        #hacker-log { font-family: 'Courier Prime', monospace; font-size: 14px; color: rgba(255, 255, 255, 0.6); text-align: left; width: 80%; max-width: 300px; height: 100px; overflow-y: hidden; border-top: 1px solid rgba(255, 255, 255, 0.1); padding-top: 10px; }
+        body, html {
+            margin: 0; padding: 0;
+            width: 100vw; height: 100vh;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            color: var(--text-main);
+            background-color: var(--bg);
+            overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
 
-        /* --- GIAO DIỆN CHÍNH REDESIGN --- */
-        #main-app { display: none; height: 100vh; width: 100vw; background-size: cover; background-position: center; box-shadow: inset 0 0 0 2000px rgba(9, 9, 11, 0.85); flex-direction: column; }
+        #loader {
+            position: fixed; top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            z-index: 9999;
+            display: flex; justify-content: center; align-items: center; flex-direction: column;
+            transition: opacity 0.6s ease;
+            background-color: #050810;
+            background-size: cover; background-position: center;
+            box-shadow: inset 0 0 0 2000px rgba(5, 8, 16, 0.9);
+        }
         
-        .app-header { padding: 20px; text-align: center; font-size: 18px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; background: linear-gradient(180deg, rgba(0,0,0,0.8) 0%, transparent 100%); color: var(--accent-color); text-shadow: 0 0 10px rgba(6, 182, 212, 0.5); z-index: 10; }
+        #loader .avatar-container {
+            width: 130px; height: 130px;
+            position: relative; margin-bottom: 30px;
+        }
+        
+        #loader .avatar-container::before,
+        #loader .avatar-container::after {
+            content: '';
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            border-radius: 50%;
+            border: 1px solid rgba(0, 210, 255, 0.4);
+            animation: pulseRing 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        #loader .avatar-container::after {
+            animation-delay: 1s;
+            border-color: rgba(157, 78, 221, 0.3);
+        }
+        
+        @keyframes pulseRing {
+            0%   { width: 130px; height: 130px; opacity: 1; }
+            100% { width: 240px; height: 240px; opacity: 0; }
+        }
+        
+        #loader .rotating-avatar {
+            width: 100%; height: 100%;
+            border-radius: 50%;
+            border: 2px solid rgba(0, 210, 255, 0.6);
+            box-shadow: 0 0 20px rgba(0, 210, 255, 0.2);
+            animation: spin 8s linear infinite;
+            object-fit: cover;
+            background: #1a1a2e; /* Fallback color */
+        }
+        
+        @keyframes spin { to { transform: rotate(360deg); } }
 
-        .tab-container { flex: 1; padding: 10px 20px 90px 20px; box-sizing: border-box; overflow-y: auto; display: flex; flex-direction: column; align-items: center; }
-        .tab-content { display: none; width: 100%; max-width: 450px; animation: fadeIn 0.4s ease; }
+        #hacker-log {
+            font-family: 'Courier Prime', monospace; font-size: 13px;
+            color: rgba(0, 210, 255, 0.9); text-align: left;
+            width: 80%; max-width: 320px; height: 90px; overflow-y: hidden;
+            border-left: 2px solid rgba(0, 210, 255, 0.4); padding-left: 12px;
+        }
+        
+        .log-line { opacity: 0; animation: fadeInLine 0.4s ease forwards; line-height: 1.5; }
+        @keyframes fadeInLine { to { opacity: 1; transform: translateX(0); } from { transform: translateX(-10px); } }
+
+        #main-app {
+            display: none;
+            height: 100vh; width: 100vw;
+            background-color: var(--bg);
+            background-size: cover; background-position: center;
+            box-shadow: inset 0 0 0 2000px rgba(5, 8, 16, 0.88);
+            flex-direction: column;
+            position: relative;
+            overflow: hidden;
+        }
+
+        #main-app::before {
+            content: '';
+            position: absolute; top: -20%; left: -20%;
+            width: 60%; height: 60%;
+            background: radial-gradient(circle, rgba(0, 210, 255, 0.05) 0%, transparent 60%);
+            border-radius: 50%;
+            animation: orbA 12s ease-in-out infinite alternate;
+            pointer-events: none; z-index: 0;
+        }
+        #main-app::after {
+            content: '';
+            position: absolute; bottom: -20%; right: -20%;
+            width: 60%; height: 60%;
+            background: radial-gradient(circle, rgba(157, 78, 221, 0.05) 0%, transparent 60%);
+            border-radius: 50%;
+            animation: orbB 15s ease-in-out infinite alternate;
+            pointer-events: none; z-index: 0;
+        }
+        @keyframes orbA { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(10%,15%) scale(1.1); } }
+        @keyframes orbB { 0% { transform: translate(0,0) scale(1); } 100% { transform: translate(-10%,-15%) scale(1.1); } }
+
+        .app-header {
+            padding: 24px 20px 16px;
+            text-align: center;
+            font-size: 15px; font-weight: 700;
+            letter-spacing: 4px; text-transform: uppercase;
+            background: linear-gradient(180deg, rgba(5,8,16,0.95) 0%, transparent 100%);
+            color: var(--cyan);
+            text-shadow: 0 2px 10px rgba(0, 210, 255, 0.4);
+            z-index: 10; position: relative;
+        }
+
+        .tab-container {
+            flex: 1; padding: 10px 16px 90px 16px; box-sizing: border-box;
+            overflow-y: auto; overflow-x: hidden;
+            display: flex; flex-direction: column; align-items: center;
+            position: relative; z-index: 1; -webkit-overflow-scrolling: touch; scroll-behavior: smooth;
+        }
+        .tab-container::-webkit-scrollbar { display: none; }
+        .tab-container { scrollbar-width: none; }
+
+        .tab-content { display: none; width: 100%; max-width: 480px; animation: fadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
         .tab-content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 0; width: 100%; display: flex; background: rgba(15, 15, 15, 0.9); backdrop-filter: blur(15px); border-top: 1px solid var(--card-border); padding-bottom: env(safe-area-inset-bottom); z-index: 50; }
-        .nav-item { flex: 1; text-align: center; padding: 15px 5px; color: var(--text-muted); font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; cursor: pointer; transition: 0.3s; display: flex; flex-direction: column; align-items: center; gap: 5px; }
-        .nav-item.active { color: var(--accent-color); text-shadow: 0 0 8px rgba(6, 182, 212, 0.4); }
-        .nav-indicator { width: 4px; height: 4px; border-radius: 50%; background: transparent; transition: 0.3s; }
-        .nav-item.active .nav-indicator { background: var(--accent-color); box-shadow: 0 0 8px var(--accent-color); }
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; width: 100%; display: flex;
+            background: rgba(10, 15, 28, 0.85); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+            border-top: 1px solid rgba(255,255,255,0.05); padding-bottom: env(safe-area-inset-bottom); z-index: 50;
+        }
+        
+        .nav-item {
+            flex: 1; text-align: center; padding: 12px 4px 10px; color: var(--text-muted);
+            font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; cursor: pointer;
+            transition: all 0.3s ease; display: flex; flex-direction: column; align-items: center; gap: 4px;
+            position: relative; -webkit-tap-highlight-color: transparent;
+        }
+        
+        .nav-item.active { color: var(--cyan); transform: translateY(-2px); }
+        
+        .nav-pill {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 0; height: 3px; border-radius: 0 0 4px 4px; background: var(--accent-gradient);
+            transition: width 0.4s cubic-bezier(0.34,1.56,0.64,1);
+        }
+        .nav-item.active .nav-pill { width: 32px; box-shadow: 0 2px 8px rgba(0,210,255,0.5); }
+        .nav-icon { font-size: 18px; line-height: 1; margin-bottom: 2px; }
 
-        .card { background: var(--card-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px); border: 1px solid var(--card-border); border-radius: 24px; padding: 25px; margin-bottom: 20px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4); }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; border-bottom: 1px solid var(--card-border); padding-bottom: 12px; }
-        h2 { margin: 0; font-weight: 700; font-size: 16px; text-transform: uppercase; color: #fff; }
-        h3 { margin: 0 0 10px 0; font-size: 14px; color: var(--accent-color); text-transform: uppercase; font-weight: 600; }
-        p { font-size: 13px; line-height: 1.6; color: var(--text-muted); margin: 5px 0; }
+        .card {
+            background: var(--card-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--card-border); border-top-color: var(--card-border-top);
+            border-radius: 16px; padding: 20px; margin-bottom: 16px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            position: relative; overflow: hidden;
+        }
+        
+        .card::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0,210,255,0.3), rgba(157,78,221,0.3), transparent);
+        }
+        
+        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 12px; }
+        h2 { margin: 0; font-weight: 700; font-size: 15px; text-transform: uppercase; color: #fff; letter-spacing: 1px; }
+        h3 { margin: 0 0 10px 0; font-size: 13px; color: var(--cyan); text-transform: uppercase; font-weight: 600; letter-spacing: 1px; }
+        p { font-size: 13px; line-height: 1.6; color: var(--text-muted); margin: 6px 0; }
         strong { color: #fff; font-weight: 600; }
-        .realm-name-big { font-size: 26px; color: #fff; font-weight: 700; background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-        .task-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255, 255, 255, 0.02); padding: 15px; border-radius: 16px; margin-bottom: 12px; border: 1px solid rgba(255, 255, 255, 0.04); transition: 0.3s; }
-        .task-row:hover { background: rgba(255, 255, 255, 0.05); }
-        .task-info { display: flex; flex-direction: column; width: 60%; }
-        .task-title { font-size: 14px; color: #fff; font-weight: 600; margin-bottom: 4px; line-height: 1.4; }
-        .task-prog { font-size: 11px; color: var(--accent-color); font-weight: 600; }
-        .task-status-text { font-size: 12px; font-weight: 600; color: var(--success-color); }
+        .realm-name-big {
+            font-size: 24px; color: #fff; font-weight: 800; background: var(--accent-gradient);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin: 10px 0; line-height: 1.3;
+        }
 
-        button.action-btn { background: rgba(255, 255, 255, 0.05); color: #fff; border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 12px; padding: 10px 14px; font-family: inherit; font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
-        button.action-btn:hover { background: rgba(255, 255, 255, 0.1); }
-        button.action-btn:active { transform: scale(0.95); }
-        button.action-btn:disabled { opacity: 0.5; cursor: not-allowed; }
-        button.main-btn { width: 100%; padding: 16px; font-size: 14px; margin-top: 15px; background: var(--accent-gradient); border: none; border-radius: 16px; text-transform: uppercase; letter-spacing: 1px; box-shadow: 0 4px 15px rgba(6, 182, 212, 0.3); }
-        button.main-btn:hover { box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5); }
-        button.danger-btn { background: var(--danger-gradient); box-shadow: 0 4px 15px rgba(239, 68, 68, 0.3); }
+        .task-row {
+            display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.03);
+            padding: 14px 16px; border-radius: 12px; margin-bottom: 10px; border: 1px solid rgba(255,255,255,0.05); transition: background 0.2s;
+        }
+        .task-row:active { background: rgba(255,255,255,0.06); }
+        .task-info { display: flex; flex-direction: column; width: 65%; }
+        .task-title { font-size: 14px; color: #fff; font-weight: 500; margin-bottom: 4px; line-height: 1.4; }
+        .task-prog { font-size: 12px; color: var(--cyan); font-weight: 500; }
+        .task-status-text { font-size: 12px; font-weight: 600; color: var(--success); }
 
-        .progress-bar { width: 100%; background: rgba(0, 0, 0, 0.5); height: 8px; border-radius: 10px; overflow: hidden; margin-top: 15px; border: 1px solid rgba(255, 255, 255, 0.05); }
-        .progress { height: 100%; background: var(--accent-gradient); width: 0%; box-shadow: 0 0 10px rgba(6, 182, 212, 0.5); transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1); border-radius: 10px; }
+        button.action-btn {
+            background: rgba(0,210,255,0.1); color: #fff; border: 1px solid rgba(0,210,255,0.25);
+            border-radius: 10px; padding: 10px 16px; font-family: inherit; font-size: 12px; font-weight: 600;
+            cursor: pointer; transition: all 0.2s ease; -webkit-tap-highlight-color: transparent;
+        }
+        button.action-btn:active { transform: scale(0.96); background: rgba(0,210,255,0.2); }
+        button.action-btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; background: rgba(255,255,255,0.05); border-color: rgba(255,255,255,0.1); color: var(--text-muted); }
 
-        .log-box { background: rgba(0,0,0,0.4); border: 1px solid var(--card-border); padding: 15px; border-radius: 16px; font-family: 'Courier Prime', monospace; font-size: 11px; color: var(--success-color); height: 150px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 15px; line-height: 1.5; }
-        textarea.backup-area { width: 100%; height: 80px; background: rgba(0,0,0,0.4); color: #fff; border: 1px solid var(--card-border); border-radius: 16px; padding: 15px; font-size: 12px; box-sizing: border-box; margin-top: 10px; resize: none; font-family: monospace; }
+        button.main-btn {
+            width: 100%; padding: 16px; font-size: 14px; margin-top: 16px; background: var(--accent-gradient);
+            border: none; border-radius: 12px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; color: #fff;
+            box-shadow: 0 4px 15px rgba(0,210,255,0.25);
+        }
+        button.main-btn:active { box-shadow: 0 2px 8px rgba(0,210,255,0.2); }
+        button.danger-btn { background: var(--danger-gradient); box-shadow: 0 4px 15px rgba(239,68,68,0.2); }
+
+        .progress-bar { width: 100%; background: rgba(0,0,0,0.4); height: 10px; border-radius: 20px; overflow: hidden; margin-top: 16px; border: 1px solid rgba(255,255,255,0.05); }
+        .progress {
+            height: 100%; background: var(--accent-gradient); width: 0%; box-shadow: 0 0 10px rgba(0,210,255,0.4);
+            transition: width 0.8s cubic-bezier(0.4,0,0.2,1); border-radius: 20px; position: relative; overflow: hidden;
+        }
+        .progress::after {
+            content: ''; position: absolute; top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+            animation: shimmer 2.5s ease-in-out infinite;
+        }
+        @keyframes shimmer { 0% { left: -100%; } 100% { left: 200%; } }
+
+        .log-box {
+            background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); padding: 14px; border-radius: 12px;
+            font-family: 'Courier Prime', monospace; font-size: 12px; color: var(--success);
+            height: 140px; overflow-y: auto; white-space: pre-wrap; margin-bottom: 14px; line-height: 1.5;
+        }
         
-        .buff-text { color: #facc15; font-weight: 700; font-size: 15px; }
-        .achievement-icon { width: 32px; height: 32px; vertical-align: middle; margin-left: 8px; filter: drop-shadow(0 0 5px rgba(255,255,255,0.3)); }
+        textarea.backup-area {
+            width: 100%; height: 80px; background: rgba(0,0,0,0.3); color: #fff;
+            border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; padding: 14px;
+            font-size: 12px; box-sizing: border-box; margin-top: 12px; resize: none; font-family: 'Courier Prime', monospace;
+            outline: none; transition: border-color 0.3s;
+        }
+        textarea.backup-area:focus { border-color: var(--cyan); }
+
+        .buff-text { font-weight: 700; font-size: 15px; }
+        .buff-10  { color: var(--text-main); }
+        .buff-11  { color: #fbbf24; }
+        .buff-12  { color: #f97316; }
+        .buff-13p { color: #ef4444; }
+
+        .achievement-icon { width: 28px; height: 28px; vertical-align: middle; margin-left: 8px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3)); }
+
+        .flex-row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; gap: 10px; }
+        .stat-box {
+            background: rgba(255,255,255,0.03); padding: 16px 10px; border-radius: 12px; text-align: center; flex: 1; border: 1px solid rgba(255,255,255,0.05);
+        }
+        .stat-box .num { font-size: 24px; font-weight: 700; color: #fff; display: block; margin-bottom: 4px; }
+        .stat-box .lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .streak-active { color: var(--cyan) !important; text-shadow: 0 0 10px rgba(0,210,255,0.3); }
+
+        /* ═══════════════════════════════════════════
+           FARM TAB
+        ═══════════════════════════════════════════ */
+        .farm-resource-bar { display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: nowrap; }
+        .farm-res {
+            flex: 1; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2);
+            border-radius: 12px; padding: 10px; display: flex; align-items: center; gap: 8px; min-width: 0;
+        }
+        .farm-res.pill-r { background: rgba(157,78,221,0.08); border-color: rgba(157,78,221,0.2); }
+        .farm-res .ricon { font-size: 18px; flex-shrink: 0; }
+        .farm-res .rval { color: #fff; font-size: 13px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block; }
+        .farm-res .rlbl { font-size: 10px; color: var(--text-muted); display: block; white-space: nowrap; margin-bottom: 2px; }
+
+        .plot-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 16px; }
+        .plot-card {
+            background: rgba(0,0,0,0.2); border: 1px solid rgba(16,185,129,0.15); border-radius: 14px; padding: 14px 8px;
+            text-align: center; display: flex; flex-direction: column; align-items: center; gap: 6px; min-height: 140px;
+            transition: all 0.3s ease;
+        }
+        .plot-card.growing { border-color: rgba(16,185,129,0.4); background: rgba(16,185,129,0.05); }
+        .plot-card.ready { border-color: var(--gold); background: rgba(251,191,36,0.05); animation: readyPulse 2s ease-in-out infinite; }
+        @keyframes readyPulse { 0%,100% { box-shadow: 0 0 5px rgba(251,191,36,0.1); } 50% { box-shadow: 0 0 15px rgba(251,191,36,0.3); } }
+
+        .plot-emoji { font-size: 28px; line-height: 1; margin-bottom: 4px; }
+        .plot-timer { font-size: 12px; color: var(--cyan); font-weight: 600; font-family: 'Courier Prime', monospace; }
+        .plot-lbl { font-size: 11px; color: var(--text-main); font-weight: 500; line-height: 1.3; }
+
+        .plot-btn {
+            font-size: 11px; padding: 6px 10px; border-radius: 8px; font-weight: 600; margin-top: auto;
+            background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: var(--green);
+            cursor: pointer; transition: all 0.2s; font-family: inherit; -webkit-tap-highlight-color: transparent; width: 100%;
+        }
+        .plot-btn:active { transform: scale(0.95); }
+        .plot-btn:disabled { opacity: 0.5; cursor: not-allowed; background: transparent; border-color: rgba(255,255,255,0.1); color: var(--text-muted); }
+        .plot-btn.harvest { background: rgba(251,191,36,0.15); border-color: rgba(251,191,36,0.4); color: var(--gold); }
+
+        .crop-select {
+            display: none; flex-direction: column; gap: 6px; width: 100%; max-height: 140px;
+            overflow-y: auto; -webkit-overflow-scrolling: touch; background: rgba(5,8,16,0.9);
+            border: 1px solid rgba(16,185,129,0.2); border-radius: 10px; padding: 6px; scrollbar-width: none;
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0; z-index: 5;
+        }
+        .plot-card { position: relative; } /* Needed for absolute positioning of crop-select */
+        .crop-select::-webkit-scrollbar { display: none; }
+        .crop-select.visible { display: flex; }
+        .crop-opt {
+            background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); border-radius: 8px; padding: 8px;
+            font-size: 11px; color: #fff; cursor: pointer; font-family: inherit; font-weight: 500; text-align: left;
+            transition: background 0.2s; -webkit-tap-highlight-color: transparent; line-height: 1.4;
+        }
+        .crop-opt:active { background: rgba(16,185,129,0.25); }
+        .crop-opt small { color: var(--text-muted); font-size: 9px; display: block; margin-top: 2px; }
+
+        .pill-selector {
+            display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch;
+            padding-bottom: 8px; margin: 12px 0 8px; scrollbar-width: none;
+        }
+        .pill-selector::-webkit-scrollbar { display: none; }
+        .pill-opt {
+            background: rgba(157,78,221,0.05); border: 1px solid rgba(157,78,221,0.2);
+            border-radius: 10px; padding: 8px 12px;
+            font-size: 11px; color: #fff; cursor: pointer; font-family: inherit; font-weight: 500;
+            text-align: center; white-space: nowrap; min-width: 85px; flex-shrink: 0;
+            transition: all 0.2s; -webkit-tap-highlight-color: transparent;
+        }
+        .pill-opt.active { border-color: var(--purple); background: rgba(157,78,221,0.2); box-shadow: 0 0 15px rgba(157,78,221,0.15); }
+        .pill-opt small { color: var(--text-muted); font-size: 9px; display: block; margin-top: 3px; }
+
+        .pill-info-bar {
+            font-size: 11px; color: var(--text-muted); text-align: center; padding: 6px 0 10px;
+            border-bottom: 1px solid rgba(255,255,255,0.05); margin-bottom: 12px; font-weight: 500;
+        }
+
+        .factory-section {
+            background: rgba(0,0,0,0.2); border: 1px solid rgba(157,78,221,0.2); border-top-color: rgba(157,78,221,0.4);
+            border-radius: 16px; padding: 20px; margin-bottom: 16px; position: relative;
+        }
         
-        .flex-row { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
-        .stat-box { background: rgba(0,0,0,0.3); padding: 10px 15px; border-radius: 12px; text-align: center; flex: 1; margin: 0 5px; border: 1px solid rgba(255,255,255,0.03); }
-        .stat-box .num { font-size: 20px; font-weight: 700; color: #fff; display: block; margin-bottom: 3px; }
-        .stat-box .lbl { font-size: 10px; color: var(--text-muted); text-transform: uppercase; }
+        .factory-queue { display: flex; gap: 8px; margin: 12px 0 8px; justify-content: flex-end; }
+        .q-slot {
+            width: 32px; height: 32px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.4);
+            display: flex; align-items: center; justify-content: center; font-size: 16px; transition: all 0.3s;
+        }
+        .q-slot.active-q { border-color: var(--purple); background: rgba(157,78,221,0.1); box-shadow: 0 0 10px rgba(157,78,221,0.2); }
+
+        .factory-timer {
+            font-size: 28px; font-weight: 700; color: var(--purple); font-family: 'Courier Prime', monospace;
+            text-align: center; margin: 16px 0; letter-spacing: 2px;
+        }
+        
+        .factory-btns { display: flex; gap: 12px; margin-top: 16px; }
+        .factory-btns button { flex: 1; font-size: 12px; padding: 12px 8px; }
+
+        .farm-status { font-size: 12px; color: var(--success); text-align: center; padding: 6px; min-height: 28px; font-weight: 500; transition: opacity 0.3s; margin-bottom: 8px;}
+
+        .upgrade-row { display: flex; justify-content: space-between; align-items: center; background: rgba(251,191,36,0.05); border: 1px solid rgba(251,191,36,0.15); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+        .upgrade-info { flex: 1; padding-right: 10px; }
+        .upgrade-name { font-size: 13px; font-weight: 600; color: #fff; margin-bottom: 4px; }
+        .upgrade-desc { font-size: 11px; color: var(--text-muted); line-height: 1.4; }
+        .upg-btn {
+            background: rgba(251,191,36,0.15); border: 1px solid rgba(251,191,36,0.4); border-radius: 10px;
+            padding: 8px 16px; color: var(--gold); font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; transition: all 0.2s; -webkit-tap-highlight-color: transparent; white-space: nowrap;
+        }
+        .upg-btn:active { transform: scale(0.95); }
+        .upg-btn:disabled { opacity: 0.5; cursor: not-allowed; transform: none !important; }
+        .upg-btn.owned { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.3); color: var(--success); }
+
     </style>
 </head>
 <body>
 
     <div id="loader">
-        <div class="avatar-container"><img src="" class="rotating-avatar" id="loader-img" alt="Avatar"></div>
+        <div class="avatar-container"><img src="" class="rotating-avatar" id="loader-img" alt="System Loader"></div>
         <div id="hacker-log"></div>
     </div>
 
     <div id="main-app">
-        <div class="app-header">Hệ Thống Tu Chân</div>
+        <div class="app-header">⚔ Hệ Thống Tu Chân ⚔</div>
 
         <div class="tab-container">
-            
             <div id="tab-checkin" class="tab-content active">
                 <div class="card">
                     <div class="card-header">
-                        <h2>Ký danh mỗi ngày</h2>
-                        <span id="streak-icon"></span>
+                        <h2>Ký Danh Mỗi Ngày</h2><span id="streak-icon"></span>
                     </div>
                     <p>Reset vào 00:00 hàng ngày. Bỏ lỡ 1 ngày sẽ mất chuỗi và xóa Buff.</p>
-                    <div class="flex-row" style="margin: 20px 0;">
-                        <div class="stat-box">
-                            <span class="num" id="consecutive-days">0</span>
-                            <span class="lbl">Chuỗi Ngày</span>
-                        </div>
-                        <div class="stat-box">
-                            <span class="num" id="buff-checkin-display">1.0x</span>
-                            <span class="lbl">Buff Chuỗi</span>
-                        </div>
+                    <div class="flex-row" style="margin:20px 0;">
+                        <div class="stat-box"><span class="num" id="consecutive-days">0</span><span class="lbl">Chuỗi Ngày</span></div>
+                        <div class="stat-box"><span class="num" id="buff-checkin-display">1.0x</span><span class="lbl">Buff Chuỗi</span></div>
                     </div>
                     <button id="btn-checkin" class="action-btn main-btn" onclick="dailyCheckIn()">Ký danh nhận thưởng</button>
                 </div>
-                
                 <div class="card">
                     <h3>Thống Kê Đạo Hạnh</h3>
                     <div class="flex-row">
-                        <div class="stat-box">
-                            <span class="num" id="stat-total-daily">0</span>
-                            <span class="lbl">Tổng NV Ngày</span>
-                        </div>
-                        <div class="stat-box">
-                            <span class="num" id="stat-total-weekly">0</span>
-                            <span class="lbl">Tổng Mốc Tuần</span>
-                        </div>
+                        <div class="stat-box"><span class="num" id="stat-total-daily">0</span><span class="lbl">Tổng NV Ngày</span></div>
+                        <div class="stat-box"><span class="num" id="stat-total-weekly">0</span><span class="lbl">Tổng Mốc Tuần</span></div>
                     </div>
                 </div>
             </div>
@@ -133,14 +411,12 @@
                 <div class="card">
                     <h3>Nhiệm vụ Ngày (Random)</h3>
                     <p>5 nhiệm vụ mới xuất hiện lúc 00:00 mỗi ngày.</p>
-                    <div id="daily-tasks-container" style="margin-top: 15px;">
-                        </div>
+                    <div id="daily-tasks-container" style="margin-top:16px;"></div>
                 </div>
-
                 <div class="card">
                     <h3>Mục tiêu Tuần</h3>
                     <p>Reset vào 00:00 Chủ Nhật.</p>
-                    <div class="task-row" style="margin-top: 15px;">
+                    <div class="task-row" style="margin-top:16px;">
                         <div class="task-info">
                             <span class="task-title">Chăm chỉ (25 NV Ngày)</span>
                             <span class="task-prog">Tiến độ: <span id="prog-wt1">0</span>/25</span>
@@ -161,54 +437,100 @@
                 <div class="card">
                     <div class="card-header">
                         <h2>Bản Tôn Tu Chân</h2>
-                        <span style="font-size: 12px; color: var(--accent-color); font-weight: 600;">Danh vọng: <span id="points">0</span></span>
+                        <span style="font-size:12px;color:var(--cyan);font-weight:600;">Danh vọng: <span id="points">0</span></span>
                     </div>
                     <p class="realm-name-big" id="realm-name">Ngưng Khí Tầng 1</p>
-                    <div style="display: flex; justify-content: space-between; font-size: 12px; margin-top: 15px; color: #fff; font-weight: 600;">
-                        <span>Tiến độ:</span>
-                        <span><span id="exp">0</span> / <span id="max-exp">100</span></span>
+                    <div style="display:flex;justify-content:space-between;font-size:12px;margin-top:16px;color:#fff;font-weight:500;">
+                        <span>Tiến độ:</span><span><span id="exp">0</span> / <span id="max-exp">100</span></span>
                     </div>
                     <div class="progress-bar"><div class="progress" id="exp-bar"></div></div>
                 </div>
-
                 <div class="card">
                     <h3>Hiệu Ứng Trợ Công (Buffs)</h3>
                     <p>Hệ số nhân dồn (Multiplicative) trên mọi nguồn Tu Vi.</p>
-                    <div class="task-row">
-                        <span style="font-size: 13px; font-weight: 600;">Buff Chuỗi Điểm Danh</span>
-                        <span id="buff-checkin" class="buff-text">1.0x</span>
-                    </div>
-                    <div class="task-row">
-                        <span style="font-size: 13px; font-weight: 600;">Buff Thành Tích Ngày</span>
-                        <span id="buff-daily" class="buff-text">1.0x</span>
-                    </div>
-                    <div class="task-row">
-                        <span style="font-size: 13px; font-weight: 600;">Buff Thành Tích Tuần</span>
-                        <span id="buff-weekly" class="buff-text">1.0x</span>
-                    </div>
-                    <div class="card-header" style="margin-top: 15px; padding-bottom: 0; border: none;">
-                        <h2 style="color: var(--accent-color);">TỔNG HỆ SỐ</h2>
-                        <span id="buff-total" style="color: #0f0; font-size: 22px; font-weight: 700;">1.0x</span>
+                    <div class="task-row" style="margin-top:12px;"><span style="font-size:13px;font-weight:500;">Buff Chuỗi Điểm Danh</span><span id="buff-checkin" class="buff-text buff-10">1.0x</span></div>
+                    <div class="task-row"><span style="font-size:13px;font-weight:500;">Buff Thành Tích Ngày</span><span id="buff-daily" class="buff-text buff-10">1.0x</span></div>
+                    <div class="task-row"><span style="font-size:13px;font-weight:500;">Buff Thành Tích Tuần</span><span id="buff-weekly" class="buff-text buff-10">1.0x</span></div>
+                    <div class="card-header" style="margin-top:16px;padding-bottom:0;border:none;">
+                        <h2 style="color:var(--cyan);">TỔNG HỆ SỐ</h2><span id="buff-total" style="color:var(--green);font-size:24px;font-weight:700;">1.0x</span>
                     </div>
                 </div>
             </div>
 
             <div id="tab-system" class="tab-content">
                 <div class="card">
-                    <div class="card-header">
-                        <h2>Nhật ký cập nhật</h2>
-                        <button class="action-btn" onclick="fetchUpdateLog()" style="padding: 6px 10px; font-size: 10px;">Làm Mới</button>
-                    </div>
+                    <div class="card-header"><h2>Nhật ký cập nhật</h2><button class="action-btn" onclick="fetchUpdateLog()" style="padding:8px 12px;font-size:11px;">Làm Mới</button></div>
                     <div class="log-box" id="update-log-box">Đang kết nối tới máy chủ đám mây...</div>
                 </div>
-
                 <div class="card">
                     <h2>Bảo Mật Dữ Liệu</h2>
                     <p>Copy mã dưới đây cất đi để không bao giờ mất Tu Vi.</p>
                     <textarea id="backup-code" class="backup-area" placeholder="Dán mã phục hồi vào đây..."></textarea>
-                    <div style="display: flex; gap: 15px; margin-top: 15px;">
-                        <button class="action-btn main-btn" style="margin-top: 0;" onclick="exportData()">Tạo Mã</button>
-                        <button class="action-btn main-btn danger-btn" style="margin-top: 0;" onclick="importData()">Phục Hồi</button>
+                    <div style="display:flex;gap:12px;margin-top:16px;">
+                        <button class="action-btn main-btn" style="margin-top:0;" onclick="exportData()">Tạo Mã</button>
+                        <button class="action-btn main-btn danger-btn" style="margin-top:0;" onclick="importData()">Phục Hồi</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="tab-farm" class="tab-content">
+                <div class="farm-resource-bar">
+                    <div class="farm-res">
+                        <span class="ricon">🌿</span>
+                        <div style="min-width:0;">
+                            <span class="rlbl">Linh Thảo</span>
+                            <span class="rval" id="farm-linhthao">0</span>
+                        </div>
+                    </div>
+                    <div class="farm-res pill-r">
+                        <span class="ricon">💊</span>
+                        <div style="min-width:0;">
+                            <span class="rlbl">Đan Dược</span>
+                            <span class="rval" id="farm-danduo">0</span>
+                        </div>
+                    </div>
+                    <div class="farm-res pill-r">
+                        <span class="ricon">⚗️</span>
+                        <div style="min-width:0;">
+                            <span class="rlbl">Đang chọn</span>
+                            <span class="rval" id="farm-selected-pill" style="font-size:11px;">Tụ Linh Đan</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="farm-status" id="farm-status"></div>
+
+                <div class="card">
+                    <h3>🌾 Ruộng Trồng Trọt</h3>
+                    <p>Trồng cây để thu hoạch Linh Thảo.</p>
+                    <div class="plot-grid" id="plots-container"></div>
+                </div>
+
+                <div class="factory-section">
+                    <h3>⚗️ Lò Luyện Đan</h3>
+                    <div class="pill-selector" id="pill-selector-row"></div>
+                    <div class="pill-info-bar" id="pill-info-display">Chi phí: 30🌿 · Thời gian: 02:00:00 · +500 EXP</div>
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:8px;">
+                        <span style="font-size:12px;color:var(--text-muted);font-weight:500;">Hàng chờ (max 5):</span>
+                        <div class="factory-queue" id="factory-queue-display"></div>
+                    </div>
+                    <div class="factory-timer" id="factory-timer">--:--</div>
+                    <div class="factory-btns">
+                        <button class="action-btn" id="btn-craft" style="background:rgba(157,78,221,0.15); border-color:rgba(157,78,221,0.4);" onclick="startCraft()">⚗️ Nạp Liệu</button>
+                        <button class="action-btn" id="btn-claim" onclick="claimPills()" style="background:rgba(16,185,129,0.15); border-color:rgba(16,185,129,0.4); color: var(--green);">💊 Dùng Đan</button>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3>⬆️ Nâng Cấp</h3>
+                    <p>Dùng Điểm Danh Vọng (kiếm từ Ký Danh Mỗi Ngày) để nâng cấp.</p>
+                    <div class="upgrade-row" style="margin-top:16px;">
+                        <div class="upgrade-info"><div class="upgrade-name">🌱 Tốc độ tăng trưởng</div><div class="upgrade-desc">Giảm 20% thời gian trồng cây</div></div>
+                        <button class="upg-btn" id="btn-upg-speed" onclick="buyUpgrade('speedUp',5)">5 🏆</button>
+                    </div>
+                    <div class="upgrade-row">
+                        <div class="upgrade-info"><div class="upgrade-name">🔥 Lò luyện nâng cấp</div><div class="upgrade-desc">Giảm 30% thời gian luyện đan</div></div>
+                        <button class="upg-btn" id="btn-upg-furnace" onclick="buyUpgrade('furnaceUp',10)">10 🏆</button>
                     </div>
                 </div>
             </div>
@@ -216,343 +538,590 @@
         </div>
 
         <div class="bottom-nav">
-            <div class="nav-item active" onclick="showTab('tab-checkin', this)">
-                <div class="nav-indicator"></div>
-                Ký Danh
-            </div>
-            <div class="nav-item" onclick="showTab('tab-tasks', this)">
-                <div class="nav-indicator"></div>
-                Nhiệm Vụ
-            </div>
-            <div class="nav-item" onclick="showTab('tab-realm', this)">
-                <div class="nav-indicator"></div>
-                Tu Vi
-            </div>
-            <div class="nav-item" onclick="showTab('tab-system', this)">
-                <div class="nav-indicator"></div>
-                Hệ Thống
-            </div>
+            <div class="nav-item active" onclick="showTab('tab-checkin',this)"><div class="nav-pill"></div><span class="nav-icon">📅</span>Ký Danh</div>
+            <div class="nav-item" onclick="showTab('tab-tasks',this)"><div class="nav-pill"></div><span class="nav-icon">📋</span>Nhiệm Vụ</div>
+            <div class="nav-item" onclick="showTab('tab-realm',this)"><div class="nav-pill"></div><span class="nav-icon">⚔️</span>Tu Vi</div>
+            <div class="nav-item" onclick="showTab('tab-system',this)"><div class="nav-pill"></div><span class="nav-icon">⚙️</span>Hệ Thống</div>
+            <div class="nav-item" onclick="showTab('tab-farm',this)"><div class="nav-pill"></div><span class="nav-icon">🌾</span>Nông Trại</div>
         </div>
     </div>
 
     <script>
-        // --- ĐÃ FIX ĐƯỜNG DẪN ẢNH NẰM CHUNG THƯ MỤC GỐC ---
-        const loadingAvatars = [
-            'img/image_4.png', 
-            'img/image_5.png', 
-            'img/image_6.png', 
-            'img/image_7.png'
-        ];
-        const waifuImages = [
-            'img/image_0.png', 
-            'img/image_1.png', 
-            'img/image_2.png', 
-            'img/image_3.png'
-        ];
-
-        // Milestone Icons (Lửa)
-        const ICON_FIRE = "img/image_fire1.png";
-        const ICON_BLUE_FIRE = "img/image_fire2.png";
+        const loadingAvatars = ['img/image_4.png','img/image_5.png','img/image_6.png','img/image_7.png'];
+        const waifuImages    = ['img/image_0.png','img/image_1.png','img/image_2.png','img/image_3.png'];
+        const ICON_FIRE        = "img/image_fire1.png";
+        const ICON_BLUE_FIRE   = "img/image_fire2.png";
         const ICON_PURPLE_FIRE = "img/image_fire3.png";
 
         const realms = [
-            { name: "Phàm Nhân", maxExp: 100 }, 
-            { name: "Ngưng Khí Tầng 1", maxExp: 200 },
-            { name: "Ngưng Khí Tầng 2", maxExp: 400 },
-            { name: "Ngưng Khí Tầng 3", maxExp: 600 },
-            { name: "Ngưng Khí Tầng 4", maxExp: 800 },
-            { name: "Ngưng Khí Tầng 5", maxExp: 1000 },
-            { name: "Ngưng Khí Tầng 6", maxExp: 1500 },
-            { name: "Ngưng Khí Tầng 7", maxExp: 2000 },
-            { name: "Ngưng Khí Tầng 8", maxExp: 2500 },
-            { name: "Ngưng Khí Tầng 9", maxExp: 3000 },
-            { name: "Ngưng Khí Tầng 10", maxExp: 4000 },
-            { name: "Ngưng Khí Tầng 11", maxExp: 5000 },
-            { name: "Ngưng Khí Tầng 12", maxExp: 6000 },
-            { name: "Ngưng Khí Tầng 13", maxExp: 8000 },
-            { name: "Ngưng Khí Tầng 14", maxExp: 10000 },
-            { name: "Ngưng Khí Tầng 15", maxExp: 15000 },
-            { name: "Trúc Cơ Sơ Kì", maxExp: 20000 }, 
-            { name: "Trúc Cơ Trung Kì", maxExp: 25000 }, 
-            { name: "Trúc Cơ Hậu Kì", maxExp: 30000 }, 
-            { name: "Trúc Cơ Viên Mãn", maxExp: 35000 }, 
-            { name: "Kết Đan Sơ Kì", maxExp: 40000 },
-            { name: "Kết Đan Trung Kì", maxExp: 50000 },
-            { name: "Kết Đan Hậu Kì", maxExp: 60000 },
-            { name: "Kết Đan Viên Mãn", maxExp: 70000 },
-            { name: "Nguyên Anh Sơ Kì", maxExp: 80000 }, 
-            { name: "Nguyên Anh Trung Kì", maxExp: 90000 },
-            { name: "Nguyên Anh Hậu Kì", maxExp: 100000 },
-            { name: "Nguyên Anh Viên Mãn", maxExp: 110000 },
-            { name: "Hóa Thần Sơ Kì", maxExp: 120000 },
-            { name: "Hóa Thần Trung Kì", maxExp: 130000 },
-            { name: "Hóa Thần Hậu Kì", maxExp: 140000 },
-            { name: "Hóa Thần Viên Mãn", maxExp: 150000 },
-            { name: "Anh Biến Sơ Kì", maxExp: 160000 }, 
-            { name: "Anh Biến Trung Kì", maxExp: 170000 },
-            { name: "Anh Biến Hậu Kì", maxExp: 180000 },
-            { name: "Anh Biến Viên Mãn", maxExp: 190000 },
-            { name: "Vấn Đỉnh Sơ Kỳ", maxExp: 200000 },
-            { name: "Vấn Đỉnh Trung Kỳ", maxExp: 220000 }, 
-            { name: "Vấn Đỉnh Hậu Kỳ", maxExp: 250000 },
-            { name: "Vấn Đỉnh Đại Viên Mãn", maxExp: 300000 },
-            { name: "Cảnh Giới Quá Độ Âm Hư", maxExp: 400000 },
-            { name: "Cảnh Giới Quá Độ Dương Thực", maxExp: 500000 }
+            { name: "Phàm Nhân", maxExp: 100 }, { name: "Ngưng Khí Tầng 1", maxExp: 200 }, { name: "Ngưng Khí Tầng 2", maxExp: 400 },
+            { name: "Ngưng Khí Tầng 3", maxExp: 600 }, { name: "Ngưng Khí Tầng 4", maxExp: 800 }, { name: "Ngưng Khí Tầng 5", maxExp: 1000 },
+            { name: "Ngưng Khí Tầng 6", maxExp: 1500 }, { name: "Ngưng Khí Tầng 7", maxExp: 2000 }, { name: "Ngưng Khí Tầng 8", maxExp: 2500 },
+            { name: "Ngưng Khí Tầng 9", maxExp: 3000 }, { name: "Ngưng Khí Tầng 10", maxExp: 4000 }, { name: "Ngưng Khí Tầng 11", maxExp: 5000 },
+            { name: "Ngưng Khí Tầng 12", maxExp: 6000 }, { name: "Ngưng Khí Tầng 13", maxExp: 8000 }, { name: "Ngưng Khí Tầng 14", maxExp: 10000 },
+            { name: "Ngưng Khí Tầng 15", maxExp: 15000 }, { name: "Trúc Cơ Sơ Kì", maxExp: 20000 }, { name: "Trúc Cơ Trung Kì", maxExp: 25000 },
+            { name: "Trúc Cơ Hậu Kì", maxExp: 30000 }, { name: "Trúc Cơ Viên Mãn", maxExp: 35000 }, { name: "Kết Đan Sơ Kì", maxExp: 40000 },
+            { name: "Kết Đan Trung Kì", maxExp: 50000 }, { name: "Kết Đan Hậu Kì", maxExp: 60000 }, { name: "Kết Đan Viên Mãn", maxExp: 70000 },
+            { name: "Nguyên Anh Sơ Kì", maxExp: 80000 }, { name: "Nguyên Anh Trung Kì", maxExp: 90000 }, { name: "Nguyên Anh Hậu Kì", maxExp: 100000 },
+            { name: "Nguyên Anh Viên Mãn", maxExp: 110000 }, { name: "Hóa Thần Sơ Kì", maxExp: 120000 }, { name: "Hóa Thần Trung Kì", maxExp: 130000 },
+            { name: "Hóa Thần Hậu Kì", maxExp: 140000 }, { name: "Hóa Thần Viên Mãn", maxExp: 150000 }, { name: "Anh Biến Sơ Kì", maxExp: 160000 },
+            { name: "Anh Biến Trung Kì", maxExp: 170000 }, { name: "Anh Biến Hậu Kì", maxExp: 180000 }, { name: "Anh Biến Viên Mãn", maxExp: 190000 },
+            { name: "Vấn Đỉnh Sơ Kỳ", maxExp: 200000 }, { name: "Vấn Đỉnh Trung Kỳ", maxExp: 220000 }, { name: "Vấn Đỉnh Hậu Kỳ", maxExp: 250000 },
+            { name: "Vấn Đỉnh Đại Viên Mãn", maxExp: 300000 }, { name: "Cảnh Giới Quá Độ Âm Hư", maxExp: 400000 }, { name: "Cảnh Giới Quá Độ Dương Thực", maxExp: 500000 }
         ];
 
-        /* --- DỮ LIỆU --- */
-        let userData = { 
-            points: 0, exp: 0, realmIndex: 0, 
-            lastLoginMidnight: 0, lastCheckinMidnight: 0, lastWeeklyReset: 0,         
-            checkinStreak: 0, totalDailyTasksDone: 0, totalWeeklyTasksDone: 0,    
-            currentDailyTasks: [],      
+        let userData = {
+            points: 0, exp: 0, realmIndex: 0,
+            lastLoginMidnight: 0, lastCheckinMidnight: 0, lastWeeklyReset: 0,
+            checkinStreak: 0, totalDailyTasksDone: 0, totalWeeklyTasksDone: 0, currentDailyTasks: [],
             weeklyTasks: { dailyDone: 0, checkins: 0, rw1: false, rw2: false, fullCompleted: false }
         };
 
-        const logs = ["> Booting Pro System...", "> Fixing Display Bugs...", "> Optimizing Base64 Encoders...", "> Loading Local Assets...", "> System Ready."];
-        let i = 0;
+        const CROPS = [
+            { name: "Tụ Linh Thảo",   emoji: "🌿", duration: 3600,   yield: 20,   desc: "1h · +20🌿" },
+            { name: "Thanh Tâm Thảo", emoji: "🍃", duration: 14400,  yield: 80,   desc: "4h · +80🌿" },
+            { name: "Luyện Khí Thảo", emoji: "🌀", duration: 57600,  yield: 350,  desc: "16h · +350🌿" },
+            { name: "Hồi Linh Thảo",  emoji: "💧", duration: 86400,  yield: 800,  desc: "24h · +800🌿" },
+            { name: "Ngũ Sắc Thảo",   emoji: "🌈", duration: 604800, yield: 5000, desc: "7 ngày · +5000🌿" }
+        ];
 
-        window.onload = () => {
+        const PILLS = [
+            { name: "Tụ Linh Đan",   emoji: "💊", cost: 30,   craftDuration: 7200,   exp: 500 },
+            { name: "Hồi Linh Đan",  emoji: "💊", cost: 100,  craftDuration: 21600,  exp: 2000 },
+            { name: "Thanh Tâm Đan", emoji: "🌀", cost: 300,  craftDuration: 64800,  exp: 7000 },
+            { name: "Luyện Khí Đan", emoji: "🌟", cost: 800,  craftDuration: 172800, exp: 25000 },
+            { name: "Sinh Cơ Đan",   emoji: "✨", cost: 2000, craftDuration: 604800, exp: 100000 }
+        ];
+
+        const MAX_QUEUE = 5;
+
+        let plotSelecting = [false, false, false];
+        let farmInterval  = null;
+
+        const logs = ["> Booting Pro System...", "> Optimizing User Interface...", "> Securing Data Standard...", "> Loading Cloud Assets...", "> System Initialization Complete."];
+        let logIdx = 0;
+
+        window.onload = function() {
             document.getElementById("loader-img").src = loadingAvatars[Math.floor(Math.random() * loadingAvatars.length)];
-            const loader = document.getElementById("loader");
-            loader.style.backgroundImage = `url('${waifuImages[Math.floor(Math.random() * waifuImages.length)]}')`;
-            
+            var loader = document.getElementById("loader");
+            loader.style.backgroundImage = "url('" + waifuImages[Math.floor(Math.random() * waifuImages.length)] + "')";
             function showLogs() {
-                if (i < logs.length) {
-                    document.getElementById("hacker-log").innerHTML += logs[i] + "<br>"; i++; setTimeout(showLogs, 400);
+                if (logIdx < logs.length) {
+                    var line = document.createElement('div'); line.className = 'log-line'; line.textContent = logs[logIdx];
+                    document.getElementById("hacker-log").appendChild(line); logIdx++; setTimeout(showLogs, 350);
                 } else {
-                    setTimeout(() => { 
-                        loader.style.opacity = "0"; 
-                        setTimeout(() => { 
-                            loader.style.display = "none"; // FIX LỖI MÀN HÌNH TRỐNG
-                            initApp(); 
-                        }, 600); 
-                    }, 800);
+                    setTimeout(function() { loader.style.opacity = "0"; setTimeout(function() { loader.style.display = "none"; initApp(); }, 600); }, 600);
                 }
             }
             showLogs();
         };
 
         function initApp() {
-            document.getElementById("main-app").style.display = "flex"; // BẬT HIỂN THỊ APP CHÍNH
-            document.getElementById("main-app").style.backgroundImage = `url('${waifuImages[Math.floor(Math.random() * waifuImages.length)]}')`;
-            loadData(); checkResets(); updateUI(); fetchUpdateLog();
+            document.getElementById("main-app").style.display = "flex";
+            document.getElementById("main-app").style.backgroundImage = "url('" + waifuImages[Math.floor(Math.random() * waifuImages.length)] + "')";
+            loadData(); initFarmData(); offlineFarmCatchup(); checkResets(); updateUI(); fetchUpdateLog(); startFarmTimer();
         }
 
         function showTab(tabId, btn) {
-            document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
-            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(function(c) { c.classList.remove('active'); });
+            document.querySelectorAll('.nav-item').forEach(function(b) { b.classList.remove('active'); });
             document.getElementById(tabId).classList.add('active'); btn.classList.add('active');
+            if (tabId === 'tab-farm') renderFarmAll();
         }
 
-        /* --- LOGIC NGẪU NHIÊN HÓA NHIỆM VỤ --- */
-       /* --- LOGIC NGẪU NHIÊN HÓA NHIỆM VỤ --- */
         function generateRandomTasks() {
-            const subjectsG11 = ['Toán', 'Ngữ Văn', 'Tiếng Anh', 'Vật lí', 'Hóa học','Lịch sử', 'Địa lí',];
-            let pool = [
-                () => { let hw = Math.floor(Math.random() * 10) + 1; return { desc: `Hoàn thành ${hw} bài tập về nhà`, max: hw, exp: 100 * hw }; },
-                () => { let sub = Math.floor(Math.random() * 3) + 1; return { desc: `Học ${sub} môn học`, max: sub, exp: 300 * sub }; },
-                () => { return { desc: `Không ăn đồ ngọt trong cả ngày`, max: 1, exp: 1000 }; },
-                () => { let randomSub = subjectsG11[Math.floor(Math.random() * subjectsG11.length)]; return { desc: `Học môn ${randomSub} lớp 11 (25-26)`, max: 1, exp: 1000 }; },
-                () => { return { desc: `Dọn dẹp góc học tập`, max: 1, exp: 700 }; },
-                () => { return { desc: `Đọc 10 trang sách/tài liệu`, max: 10, exp: 800 }; },
-                () => { return { desc: `Giải 1 đề trắc nghiệm tổng hợp`, max: 1, exp: 1500 }; },
-                () => { return { desc: `Uống đủ 2 lít nước`, max: 4, exp: 600 }; }
+            var subjectsG11 = ['Toán','Ngữ Văn','Tiếng Anh','Vật lí','Hóa học','Lịch sử','Địa lí'];
+            var pool = [
+                function() { var hw = Math.floor(Math.random()*10)+1; return { desc: 'Hoàn thành ' + hw + ' bài tập', max: hw, exp: 100*hw }; },
+                function() { var sub = Math.floor(Math.random()*3)+1; return { desc: 'Học ' + sub + ' môn học', max: sub, exp: 300*sub }; },
+                function() { return { desc: 'Không ăn đồ ngọt cả ngày', max: 1, exp: 1000 }; },
+                function() { var rs = subjectsG11[Math.floor(Math.random()*subjectsG11.length)]; return { desc: 'Học ' + rs + ' 11', max: 1, exp: 1000 }; },
+                function() { return { desc: 'Dọn dẹp góc học tập', max: 1, exp: 700 }; },
+                function() { return { desc: 'Đọc 10 trang sách', max: 10, exp: 800 }; },
+                function() { return { desc: 'Giải 1 đề trắc nghiệm', max: 1, exp: 1500 }; },
+                function() { return { desc: 'Uống đủ 2 lít nước', max: 4, exp: 600 }; }
             ];
-            pool = pool.sort(() => 0.5 - Math.random()).slice(0, 5);
-            return pool.map(generator => { let t = generator(); return { desc: t.desc, max: t.max, current: 0, exp: t.exp, completed: false }; });
+            pool = pool.sort(function() { return 0.5 - Math.random(); }).slice(0, 5);
+            return pool.map(function(gen) { var t = gen(); return { desc: t.desc, max: t.max, current: 0, exp: t.exp, completed: false }; });
         }
 
-        /* --- XỬ LÝ LƯU & RESET --- */
         function loadData() {
-            let saved = localStorage.getItem("OppoWaifuDataCloudPro");
-            if (saved) { 
-                let parsed = JSON.parse(saved);
-                userData = { ...userData, ...parsed, weeklyTasks: { ...userData.weeklyTasks, ...parsed.weeklyTasks } };
-            }
+            var saved = localStorage.getItem("OppoWaifuDataCloudPro");
+            if (saved) { var parsed = JSON.parse(saved); userData = Object.assign({}, userData, parsed, { weeklyTasks: Object.assign({}, userData.weeklyTasks, parsed.weeklyTasks) }); }
         }
         function saveData() { localStorage.setItem("OppoWaifuDataCloudPro", JSON.stringify(userData)); updateUI(); }
-
-        function getMidnight(dateObj) { return new Date(dateObj).setHours(0,0,0,0); }
-        function getLastSundayMidnight() {
-            let d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate() - d.getDay()); return d.getTime();
-        }
+        function getMidnight(d) { return new Date(d).setHours(0,0,0,0); }
+        function getLastSundayMidnight() { var d = new Date(); d.setHours(0,0,0,0); d.setDate(d.getDate()-d.getDay()); return d.getTime(); }
 
         function checkResets() {
-            let todayMidnight = getMidnight(new Date());
-            let lastSunday = getLastSundayMidnight();
-
-            if (userData.lastCheckinMidnight > 0 && (todayMidnight - userData.lastCheckinMidnight > 86400000)) {
-                userData.checkinStreak = 0; 
-            }
-            if (userData.lastLoginMidnight !== todayMidnight) {
-                userData.currentDailyTasks = generateRandomTasks();
-                userData.lastLoginMidnight = todayMidnight;
-            }
-            if (userData.lastWeeklyReset !== lastSunday) {
-                userData.weeklyTasks = { dailyDone: 0, checkins: 0, rw1: false, rw2: false, fullCompleted: false };
-                userData.lastWeeklyReset = lastSunday;
-            }
+            var tm = getMidnight(new Date()); var ls = getLastSundayMidnight();
+            if (userData.lastCheckinMidnight > 0 && (tm - userData.lastCheckinMidnight > 86400000)) userData.checkinStreak = 0;
+            if (userData.lastLoginMidnight !== tm) { userData.currentDailyTasks = generateRandomTasks(); userData.lastLoginMidnight = tm; }
+            if (userData.lastWeeklyReset !== ls) { userData.weeklyTasks = { dailyDone:0, checkins:0, rw1:false, rw2:false, fullCompleted:false }; userData.lastWeeklyReset = ls; }
             saveData();
         }
 
-        /* --- HỆ THỐNG BUFF NHÂN --- */
         function getMultipliers() {
-            let mults = { checkin: 1.0, daily: 1.0, weekly: 1.0, total: 1.0 };
-            if (userData.checkinStreak >= 356) mults.checkin = 1.3;
-            else if (userData.checkinStreak >= 100) mults.checkin = 1.2;
-            else if (userData.checkinStreak >= 30) mults.checkin = 1.1;
-
-            if (userData.totalDailyTasksDone >= 250) mults.daily = 1.5;
-            else if (userData.totalDailyTasksDone >= 100) mults.daily = 1.3;
-            else if (userData.totalDailyTasksDone >= 50) mults.daily = 1.2;
-            else if (userData.totalDailyTasksDone >= 10) mults.daily = 1.1;
-
-            if (userData.totalWeeklyTasksDone >= 50) mults.weekly = 1.5;
-            else if (userData.totalWeeklyTasksDone >= 10) mults.weekly = 1.2;
-            else if (userData.totalWeeklyTasksDone >= 5) mults.weekly = 1.1;
-
-            mults.total = mults.checkin * mults.daily * mults.weekly;
-            return mults;
+            var m = { checkin:1.0, daily:1.0, weekly:1.0, total:1.0 };
+            if (userData.checkinStreak >= 356) m.checkin = 1.3; else if (userData.checkinStreak >= 100) m.checkin = 1.2; else if (userData.checkinStreak >= 30) m.checkin = 1.1;
+            if (userData.totalDailyTasksDone >= 250) m.daily = 1.5; else if (userData.totalDailyTasksDone >= 100) m.daily = 1.3; else if (userData.totalDailyTasksDone >= 50) m.daily = 1.2; else if (userData.totalDailyTasksDone >= 10) m.daily = 1.1;
+            if (userData.totalWeeklyTasksDone >= 50) m.weekly = 1.5; else if (userData.totalWeeklyTasksDone >= 10) m.weekly = 1.2; else if (userData.totalWeeklyTasksDone >= 5) m.weekly = 1.1;
+            m.total = m.checkin * m.daily * m.weekly; return m;
         }
 
-        function addExp(baseAmount) {
+        function addExp(amount) {
             if (userData.realmIndex >= realms.length - 1) return;
-            let mults = getMultipliers();
-            let actualExp = Math.floor(baseAmount * mults.total); 
-            
-            userData.exp += actualExp;
-            let cr = realms[userData.realmIndex];
-            
-            if (userData.exp >= cr.maxExp) {
-                userData.exp -= cr.maxExp; userData.realmIndex++;
-                alert("✦ ĐỘT PHÁ CẢNH GIỚI ✦\nTiến giai: " + realms[userData.realmIndex].name);
-            }
+            userData.exp += Math.floor(amount * getMultipliers().total);
+            var cr = realms[userData.realmIndex];
+            if (userData.exp >= cr.maxExp) { userData.exp -= cr.maxExp; userData.realmIndex++; alert("✦ ĐỘT PHÁ CẢNH GIỚI ✦\nTiến giai: " + realms[userData.realmIndex].name); }
         }
 
-        /* --- TƯƠNG TÁC NGƯỜI DÙNG --- */
         function dailyCheckIn() {
-            let todayMidnight = getMidnight(new Date());
-            userData.lastCheckinMidnight = todayMidnight;
+            var tm = getMidnight(new Date()); userData.lastCheckinMidnight = tm;
             userData.points += 1; userData.checkinStreak += 1; userData.weeklyTasks.checkins += 1;
-            
-            // Đã buff từ 20 lên 500 EXP
-            addExp(500); checkWeeklyRewards(); saveData();
-            alert("✦ KÝ DANH THÀNH CÔNG ✦\n+1 Điểm danh vọng\nĐã nhận Tu Vi");
+            addExp(500); checkWeeklyRewards(); saveData(); alert("✦ KÝ DANH THÀNH CÔNG ✦\n+1 Điểm danh vọng\nĐã nhận Tu Vi");
         }
 
-        function doDynamicTask(index) {
-            let task = userData.currentDailyTasks[index];
-            if (task.completed) return;
-
-            task.current += 1;
-            if (task.current >= task.max) {
-                task.completed = true;
-                userData.totalDailyTasksDone += 1; userData.weeklyTasks.dailyDone += 1;
-                addExp(task.exp); checkWeeklyRewards();
-                alert(`Hoàn thành: ${task.desc}!\nNhận thưởng EXP.`);
+        function doDynamicTask(idx) {
+            var t = userData.currentDailyTasks[idx]; if (t.completed) return;
+            t.current += 1;
+            if (t.current >= t.max) {
+                t.completed = true; userData.totalDailyTasksDone += 1; userData.weeklyTasks.dailyDone += 1;
+                addExp(t.exp); checkWeeklyRewards(); alert("Hoàn thành: " + t.desc + "!\nNhận thưởng EXP.");
             }
             saveData();
         }
 
         function checkWeeklyRewards() {
-            if (userData.weeklyTasks.dailyDone >= 25 && !userData.weeklyTasks.rw1) {
-                // Đã buff thưởng 25 NV từ 500 lên 3500 EXP
-                userData.weeklyTasks.rw1 = true; addExp(3500); alert("✦ MỐC TUẦN ✦\nĐã làm đủ 25 NV ngày! Thưởng Lớn EXP");
-            }
-            if (userData.weeklyTasks.checkins >= 7 && !userData.weeklyTasks.rw2) {
-                // Đã buff thưởng 7 ngày từ 300 lên 2100 EXP
-                userData.weeklyTasks.rw2 = true; addExp(2100); alert("✦ MỐC TUẦN ✦\nĐiểm danh đủ 7 ngày! Thưởng Lớn EXP");
-            }
-            if (userData.weeklyTasks.rw1 && userData.weeklyTasks.rw2 && !userData.weeklyTasks.fullCompleted) {
-                userData.weeklyTasks.fullCompleted = true; userData.totalWeeklyTasksDone += 1;
-                alert("🏆 HOÀN THÀNH MỤC TIÊU TUẦN 🏆\nĐã cộng dồn vào Thành Tích Tuần!");
-            }
+            if (userData.weeklyTasks.dailyDone >= 25 && !userData.weeklyTasks.rw1) { userData.weeklyTasks.rw1 = true; addExp(3500); alert("✦ MỐC TUẦN ✦"); }
+            if (userData.weeklyTasks.checkins >= 7 && !userData.weeklyTasks.rw2) { userData.weeklyTasks.rw2 = true; addExp(2100); alert("✦ MỐC TUẦN ✦"); }
+            if (userData.weeklyTasks.rw1 && userData.weeklyTasks.rw2 && !userData.weeklyTasks.fullCompleted) { userData.weeklyTasks.fullCompleted = true; userData.totalWeeklyTasksDone += 1; }
         }
 
-        /* --- UPDATE GIAO DIỆN --- */
+        function buffClass(val) { if (val >= 1.3) return 'buff-13p'; if (val >= 1.2) return 'buff-12'; if (val >= 1.1) return 'buff-11'; return 'buff-10'; }
+
         function updateUI() {
-            let btnCi = document.getElementById("btn-checkin");
-            let todayMidnight = getMidnight(new Date());
-            if (userData.lastCheckinMidnight === todayMidnight) {
-                btnCi.disabled = true; btnCi.innerText = "Đã điểm danh hôm nay";
-            } else { btnCi.disabled = false; btnCi.innerText = "Ký danh nhận thưởng"; }
-            
-            document.getElementById("consecutive-days").innerText = userData.checkinStreak;
-            document.getElementById("stat-total-daily").innerText = userData.totalDailyTasksDone;
+            var btnCi = document.getElementById("btn-checkin");
+            if (userData.lastCheckinMidnight === getMidnight(new Date())) { btnCi.disabled = true; btnCi.innerText = "Đã điểm danh"; } else { btnCi.disabled = false; btnCi.innerText = "Ký danh nhận thưởng"; }
+
+            var st = document.getElementById("consecutive-days"); st.innerText = userData.checkinStreak;
+            if (userData.checkinStreak > 0) st.classList.add('streak-active'); else st.classList.remove('streak-active');
+
+            document.getElementById("stat-total-daily").innerText  = userData.totalDailyTasksDone;
             document.getElementById("stat-total-weekly").innerText = userData.totalWeeklyTasksDone;
 
-            let iconHtml = "";
-            if (userData.checkinStreak >= 356) iconHtml = `<img src="${ICON_PURPLE_FIRE}" class="achievement-icon">`;
-            else if (userData.checkinStreak >= 100) iconHtml = `<img src="${ICON_BLUE_FIRE}" class="achievement-icon">`;
-            else if (userData.checkinStreak >= 30) iconHtml = `<img src="${ICON_FIRE}" class="achievement-icon">`;
-            document.getElementById("streak-icon").innerHTML = iconHtml;
+            var ih = "";
+            if (userData.checkinStreak >= 356) ih = '<img src="' + ICON_PURPLE_FIRE + '" class="achievement-icon" alt="Fire">';
+            else if (userData.checkinStreak >= 100) ih = '<img src="' + ICON_BLUE_FIRE + '" class="achievement-icon" alt="Fire">';
+            else if (userData.checkinStreak >= 30)  ih = '<img src="' + ICON_FIRE + '" class="achievement-icon" alt="Fire">';
+            document.getElementById("streak-icon").innerHTML = ih;
 
-            const tasksContainer = document.getElementById("daily-tasks-container");
-            tasksContainer.innerHTML = "";
-            userData.currentDailyTasks.forEach((task, index) => {
-                let btnText = task.completed ? "Đã xong" : (task.max > 1 ? `+1 (${task.current}/${task.max})` : "Hoàn thành");
-                let btnClass = task.completed ? "disabled" : "";
-                tasksContainer.innerHTML += `
-                    <div class="task-row">
-                        <div class="task-info">
-                            <span class="task-title">${task.desc}</span>
-                            <span class="task-prog">Cơ bản: ${task.exp} Tu Vi</span>
-                        </div>
-                        <button class="action-btn" onclick="doDynamicTask(${index})" ${btnClass}>${btnText}</button>
-                    </div>
-                `;
+            var tc = document.getElementById("daily-tasks-container"); tc.innerHTML = "";
+            userData.currentDailyTasks.forEach(function(t, i) {
+                var txt = t.completed ? "Đã xong" : (t.max > 1 ? "+1 (" + t.current + "/" + t.max + ")" : "Hoàn thành");
+                tc.innerHTML += '<div class="task-row"><div class="task-info"><span class="task-title">' + t.desc + '</span><span class="task-prog">Cơ bản: ' + t.exp + ' Tu Vi</span></div><button class="action-btn" onclick="doDynamicTask(' + i + ')" ' + (t.completed ? 'disabled' : '') + '>' + txt + '</button></div>';
             });
 
             document.getElementById("prog-wt1").innerText = userData.weeklyTasks.dailyDone;
             document.getElementById("prog-wt2").innerText = userData.weeklyTasks.checkins;
-            document.getElementById("status-wt1").innerText = userData.weeklyTasks.rw1 ? "Đã nhận thưởng" : (userData.weeklyTasks.dailyDone >= 25 ? "Đã đạt" : "Chưa đạt");
-            document.getElementById("status-wt2").innerText = userData.weeklyTasks.rw2 ? "Đã nhận thưởng" : (userData.weeklyTasks.checkins >= 7 ? "Đã đạt" : "Chưa đạt");
+            document.getElementById("status-wt1").innerText = userData.weeklyTasks.rw1 ? "Đã nhận" : (userData.weeklyTasks.dailyDone >= 25 ? "Đã đạt" : "Chưa đạt");
+            document.getElementById("status-wt2").innerText = userData.weeklyTasks.rw2 ? "Đã nhận" : (userData.weeklyTasks.checkins >= 7 ? "Đã đạt" : "Chưa đạt");
 
-            let r = realms[userData.realmIndex];
-            document.getElementById("realm-name").innerText = r.name;
-            document.getElementById("points").innerText = userData.points;
+            var r = realms[userData.realmIndex];
+            document.getElementById("realm-name").innerText = r.name; document.getElementById("points").innerText = userData.points;
             if (userData.realmIndex >= realms.length - 1) {
                 document.getElementById("exp").innerText = "MAX"; document.getElementById("max-exp").innerText = "MAX"; document.getElementById("exp-bar").style.width = "100%";
             } else {
-                document.getElementById("exp").innerText = userData.exp; document.getElementById("max-exp").innerText = r.maxExp;
-                document.getElementById("exp-bar").style.width = ((userData.exp / r.maxExp) * 100) + "%";
+                document.getElementById("exp").innerText = userData.exp; document.getElementById("max-exp").innerText = r.maxExp; document.getElementById("exp-bar").style.width = ((userData.exp / r.maxExp) * 100) + "%";
             }
 
-            let mults = getMultipliers();
-            document.getElementById("buff-checkin").innerText = mults.checkin.toFixed(1) + "x";
-            document.getElementById("buff-daily").innerText = mults.daily.toFixed(1) + "x";
-            document.getElementById("buff-weekly").innerText = mults.weekly.toFixed(1) + "x";
-            document.getElementById("buff-total").innerText = mults.total.toFixed(2) + "x";
-            document.getElementById("buff-checkin-display").innerText = mults.checkin.toFixed(1) + "x";
+            var m = getMultipliers();
+            document.getElementById("buff-checkin").className = "buff-text " + buffClass(m.checkin); document.getElementById("buff-checkin").innerText = m.checkin.toFixed(1) + "x";
+            document.getElementById("buff-daily").className = "buff-text " + buffClass(m.daily); document.getElementById("buff-daily").innerText = m.daily.toFixed(1) + "x";
+            document.getElementById("buff-weekly").className = "buff-text " + buffClass(m.weekly); document.getElementById("buff-weekly").innerText = m.weekly.toFixed(1) + "x";
+            document.getElementById("buff-total").innerText = m.total.toFixed(2) + "x"; document.getElementById("buff-checkin-display").innerText = m.checkin.toFixed(1) + "x";
+
+            updateFarmResourceDisplay(); renderFarmUpgrades();
         }
 
-        /* --- SỬA LỖI SAO LƯU TIẾNG VIỆT (BUG FIX) --- */
-        function exportData() {
-            try {
-                let encodedData = btoa(unescape(encodeURIComponent(JSON.stringify(userData))));
-                document.getElementById("backup-code").value = encodedData;
-                alert("Đã tạo mã sao lưu! Hãy Copy đoạn mã này cất vào chỗ an toàn.");
-            } catch(e) { alert("Lỗi khi tạo mã: " + e.message); }
+        // FIX SỐ 1: Thay thế escape/unescape bằng encodeURIComponent/decodeURIComponent
+        function exportData() { 
+            try { 
+                document.getElementById("backup-code").value = btoa(encodeURIComponent(JSON.stringify(userData))); 
+                alert("Đã tạo mã sao lưu!"); 
+            } catch(e) { 
+                alert("Lỗi tạo sao lưu"); 
+            } 
         }
+        
         function importData() {
-            let code = document.getElementById("backup-code").value;
-            if (!code) { alert("Vui lòng dán mã vào ô!"); return; }
-            try {
-                let decodedStr = decodeURIComponent(escape(atob(code)));
-                userData = JSON.parse(decodedStr); saveData(); updateUI();
-                alert("Phục hồi dữ liệu thành công!");
-                document.getElementById("backup-code").value = "";
-            } catch(e) { alert("Mã không hợp lệ hoặc bị lỗi! Không thể phục hồi."); }
+            var code = document.getElementById("backup-code").value; if (!code) return;
+            try { 
+                userData = JSON.parse(decodeURIComponent(atob(code))); 
+                saveData(); updateUI(); alert("Phục hồi thành công!"); 
+                document.getElementById("backup-code").value = ""; 
+            } catch(e) { 
+                alert("Mã lỗi không hợp lệ!"); 
+            }
         }
 
         function fetchUpdateLog() {
-            const logUrl = "https://raw.githubusercontent.com/KHACK54321/AX-Project/refs/heads/main/updatelog.txt?v=" + new Date().getTime(); 
-            fetch(logUrl)
-                .then(response => { if (!response.ok) throw new Error(""); return response.text(); })
-                .then(text => { document.getElementById("update-log-box").innerText = text; })
-                .catch(err => { document.getElementById("update-log-box").innerText = "Chưa có nhật ký cập nhật."; });
+            fetch("https://raw.githubusercontent.com/KHACK54321/AX-Project/refs/heads/main/updatelog.txt?v=" + new Date().getTime())
+                .then(function(r) { return r.text(); }).then(function(t) { document.getElementById("update-log-box").innerText = t; }).catch(function() {});
         }
+
+        function initFarmData() {
+            if (!userData.farm) {
+                userData.farm = {
+                    lastSave: Date.now(), linhthao: 0,
+                    plots: [{cropType:null},{cropType:null},{cropType:null}],
+                    factory: { queue: [], selectedPill: 0, completedPills: {0:0,1:0,2:0,3:0,4:0} },
+                    upgrades: { speedUp: false, furnaceUp: false }
+                };
+            } else {
+                if (!userData.farm.plots) userData.farm.plots = [{cropType:null},{cropType:null},{cropType:null}];
+                if (!userData.farm.factory) {
+                    userData.farm.factory = { queue: [], selectedPill: 0, completedPills: {0:0,1:0,2:0,3:0,4:0} };
+                } else {
+                    if (!userData.farm.factory.completedPills) userData.farm.factory.completedPills = {0:0,1:0,2:0,3:0,4:0};
+                    if (typeof userData.farm.factory.selectedPill === 'undefined') userData.farm.factory.selectedPill = 0;
+                }
+                if (!userData.farm.upgrades) userData.farm.upgrades = { speedUp: false, furnaceUp: false };
+                if (typeof userData.farm.linhthao === 'undefined') userData.farm.linhthao = 0;
+                if (userData.farm.danduo && userData.farm.danduo > 0) {
+                    userData.farm.factory.completedPills[0] = (userData.farm.factory.completedPills[0] || 0) + userData.farm.danduo;
+                    userData.farm.danduo = 0;
+                }
+            }
+        }
+
+        function getCropDuration(ci) {
+            var b = CROPS[ci].duration;
+            return userData.farm.upgrades.speedUp ? Math.floor(b * 0.8) : b;
+        }
+
+        function getFactoryDuration(pillIdx) {
+            var idx = (pillIdx !== undefined && pillIdx !== null) ? pillIdx : 0;
+            var base = PILLS[idx].craftDuration;
+            return userData.farm.upgrades.furnaceUp ? Math.floor(base * 0.7) : base;
+        }
+
+        function fmt(s) {
+            if (s <= 0) return "00:00";
+            s = Math.floor(s);
+            if (s >= 86400) {
+                var d = Math.floor(s / 86400);
+                var h = Math.floor((s % 86400) / 3600);
+                var m = Math.floor((s % 3600) / 60);
+                return d + "ngày " + h + "h " + m + "ph";
+            }
+            var h = Math.floor(s / 3600);
+            var m = Math.floor((s % 3600) / 60);
+            var sec = s % 60;
+            if (h > 0) return String(h).padStart(2,'0') + ":" + String(m).padStart(2,'0') + ":" + String(sec).padStart(2,'0');
+            return String(m).padStart(2,'0') + ":" + String(sec).padStart(2,'0');
+        }
+
+        function fmtHuman(s) {
+            s = Math.floor(s);
+            if (s >= 86400) {
+                var d = Math.floor(s / 86400);
+                var h = Math.floor((s % 86400) / 3600);
+                return "~" + d + "d " + h + "h";
+            }
+            var h = Math.floor(s / 3600);
+            var m = Math.floor((s % 3600) / 60);
+            if (h > 0) return "~" + h + "h " + m + "m";
+            return "~" + m + "m";
+        }
+
+        function fmtDuration(s) {
+            if (s >= 86400) return Math.floor(s / 86400) + " ngày";
+            if (s >= 3600) return Math.floor(s / 3600) + "h";
+            return Math.floor(s / 60) + "ph";
+        }
+
+        function offlineFarmCatchup() {
+            if (!userData.farm || !userData.farm.lastSave) return;
+            var now = Date.now();
+            var changed = false;
+
+            userData.farm.plots.forEach(function(plot) {
+                if (plot.cropType !== null && !plot.done && plot.plantedAt) {
+                    var dur = getCropDuration(plot.cropType) * 1000;
+                    if (now - plot.plantedAt >= dur) { plot.done = true; changed = true; }
+                }
+            });
+
+            var keepGoing = true;
+            while (keepGoing && userData.farm.factory.queue.length > 0) {
+                var craft = userData.farm.factory.queue[0];
+                var pillIdx = (craft.pillType !== undefined) ? craft.pillType : 0;
+                var factDurMs = getFactoryDuration(pillIdx) * 1000;
+                if (craft.startedAt && now >= craft.startedAt + factDurMs) {
+                    userData.farm.factory.completedPills[pillIdx] = (userData.farm.factory.completedPills[pillIdx] || 0) + 1;
+                    var nextStart = craft.startedAt + factDurMs;
+                    userData.farm.factory.queue.shift();
+                    if (userData.farm.factory.queue.length > 0 && !userData.farm.factory.queue[0].startedAt) {
+                        userData.farm.factory.queue[0].startedAt = nextStart;
+                    }
+                    changed = true;
+                } else {
+                    keepGoing = false;
+                }
+            }
+
+            userData.farm.lastSave = now;
+            if (changed) localStorage.setItem("OppoWaifuDataCloudPro", JSON.stringify(userData));
+        }
+
+        function plantCrop(pIdx, cIdx) {
+            var plot = userData.farm.plots[pIdx]; if (plot.cropType !== null) return;
+            plot.cropType = cIdx; plot.plantedAt = Date.now(); plot.done = false;
+            plotSelecting[pIdx] = false;
+            userData.farm.lastSave = Date.now();
+            saveData(); renderFarmPlots();
+            showFarmStatus("🌱 Đã trồng " + CROPS[cIdx].name + "!");
+        }
+
+        function harvestPlot(pIdx) {
+            var plot = userData.farm.plots[pIdx]; if (!plot.done) return;
+            var yld = CROPS[plot.cropType].yield;
+            userData.farm.linhthao = (userData.farm.linhthao || 0) + yld;
+            plot.cropType = null; plot.plantedAt = null; plot.done = false;
+            userData.farm.lastSave = Date.now();
+            saveData(); renderFarmPlots(); updateFarmResourceDisplay();
+            showFarmStatus("🌾 Thu hoạch +" + yld + " 🌿!");
+        }
+
+        function startCraft() {
+            var selectedPill = userData.farm.factory.selectedPill || 0;
+            var pill = PILLS[selectedPill];
+            if (userData.farm.factory.queue.length >= MAX_QUEUE) { showFarmStatus("❌ Hàng chờ đã đầy!"); return; }
+            if ((userData.farm.linhthao || 0) < pill.cost) { showFarmStatus("❌ Thiếu " + pill.cost + " 🌿!"); return; }
+            userData.farm.linhthao -= pill.cost;
+            userData.farm.factory.queue.push({
+                pillType: selectedPill,
+                startedAt: userData.farm.factory.queue.length === 0 ? Date.now() : null
+            });
+            userData.farm.lastSave = Date.now();
+            saveData(); updateFarmResourceDisplay(); renderFactoryQueue(); renderPillSelector();
+            showFarmStatus("⚗️ Bắt đầu luyện đan!");
+        }
+
+        function claimPills() {
+            var cp = userData.farm.factory.completedPills;
+            var total = 0;
+            PILLS.forEach(function(pill, idx) {
+                var count = cp[idx] || 0;
+                if (count > 0) { addExp(pill.exp * count); total += count; cp[idx] = 0; }
+            });
+            if (total === 0) { showFarmStatus("❌ Chưa có Đan Dược!"); return; }
+            userData.farm.lastSave = Date.now();
+            saveData(); updateFarmResourceDisplay(); updateUI();
+            showFarmStatus("💊 Dùng " + total + " Đan Dược! Nhận Tu Vi");
+        }
+
+        function buyUpgrade(key, cost) {
+            if (userData.farm.upgrades[key]) { showFarmStatus("❌ Đã sở hữu!"); return; }
+            if (userData.points < cost) { showFarmStatus("❌ Cần " + cost + " Danh Vọng!"); return; }
+            userData.points -= cost; userData.farm.upgrades[key] = true;
+            saveData(); renderFarmUpgrades(); renderPillSelector(); updateUI();
+            showFarmStatus("✅ Nâng cấp thành công!");
+        }
+
+        function showFarmStatus(msg) {
+            var el = document.getElementById('farm-status');
+            el.textContent = msg; el.style.opacity = '1';
+            clearTimeout(el._t);
+            el._t = setTimeout(function() { el.style.opacity = '0'; }, 2500);
+        }
+
+        function togglePlotSelect(idx) { plotSelecting[idx] = !plotSelecting[idx]; renderFarmPlots(); }
+
+        function selectPill(idx) {
+            userData.farm.factory.selectedPill = idx;
+            userData.farm.lastSave = Date.now();
+            localStorage.setItem("OppoWaifuDataCloudPro", JSON.stringify(userData));
+            renderPillSelector(); updateFarmResourceDisplay();
+        }
+
+        function renderFarmAll() {
+            renderFarmPlots(); renderFactoryQueue(); renderFarmUpgrades(); updateFarmResourceDisplay(); renderPillSelector();
+        }
+
+        function renderFarmPlots() {
+            var container = document.getElementById('plots-container'); if (!container) return;
+            var now = Date.now(); container.innerHTML = '';
+            userData.farm.plots.forEach(function(plot, i) {
+                var card = document.createElement('div');
+                if (plot.cropType === null) {
+                    card.className = 'plot-card';
+                    var cropOpts = CROPS.map(function(c, ci) {
+                        return '<button class="crop-opt" onclick="plantCrop(' + i + ',' + ci + ')">' +
+                            c.emoji + ' ' + c.name + '<small>+' + c.yield + '🌿 · ' + fmtDuration(c.duration) + '</small></button>';
+                    }).join('');
+                    card.innerHTML = '<div class="plot-emoji">🟫</div>' +
+                        '<div class="plot-lbl">Ruộng trống</div>' +
+                        '<button class="plot-btn" onclick="togglePlotSelect(' + i + ')">🌱 Trồng</button>' +
+                        '<div class="crop-select' + (plotSelecting[i] ? ' visible' : '') + '">' + cropOpts + '</div>';
+                } else {
+                    var cr = CROPS[plot.cropType];
+                    var dur = getCropDuration(plot.cropType) * 1000;
+                    var elp = now - plot.plantedAt;
+                    var done = plot.done || elp >= dur;
+                    if (!plot.done && done) plot.done = true;
+                    if (done) {
+                        card.className = 'plot-card ready';
+                        card.innerHTML = '<div class="plot-emoji">' + cr.emoji + '</div>' +
+                            '<div class="plot-lbl">' + cr.name + '</div>' +
+                            '<div class="plot-timer" style="color:var(--gold)">✓ Xong!</div>' +
+                            '<button class="plot-btn harvest" onclick="harvestPlot(' + i + ')">🌾 Thu</button>';
+                    } else {
+                        var remaining = Math.ceil((dur - elp) / 1000);
+                        var secLabel = '';
+                        if (cr.duration >= 3600) {
+                            secLabel = '<div id="pt-lbl-' + i + '" style="font-size:10px;color:var(--text-muted);margin-top:2px;">' + fmtHuman(remaining) + '</div>';
+                        }
+                        card.className = 'plot-card growing';
+                        card.innerHTML = '<div class="plot-emoji">' + cr.emoji + '</div>' +
+                            '<div class="plot-lbl">' + cr.name + '</div>' +
+                            '<div class="plot-timer" id="pt-' + i + '">' + fmt(remaining) + '</div>' +
+                            secLabel +
+                            '<button class="plot-btn" disabled>Đang trồng</button>';
+                    }
+                }
+                container.appendChild(card);
+            });
+        }
+
+        function renderPillSelector() {
+            var el = document.getElementById('pill-selector-row'); if (!el || !userData.farm || !userData.farm.factory) return;
+            var selectedPill = userData.farm.factory.selectedPill || 0;
+            el.innerHTML = PILLS.map(function(pill, idx) {
+                return '<button class="pill-opt' + (idx === selectedPill ? ' active' : '') + '" onclick="selectPill(' + idx + ')">' +
+                    pill.emoji + ' ' + pill.name + '<small>' + pill.cost + '🌿 · +' + pill.exp + 'EXP</small></button>';
+            }).join('');
+            
+            var infoEl = document.getElementById('pill-info-display');
+            if (infoEl) {
+                var pill = PILLS[selectedPill];
+                var dur = getFactoryDuration(selectedPill);
+                infoEl.textContent = "Cần: " + pill.cost + "🌿 | Luyện: " + fmt(dur) + " | Thưởng: +" + pill.exp + " Tu Vi";
+            }
+            
+            var btn = document.getElementById('btn-craft');
+            if (btn) btn.textContent = "⚗️ Luyện (" + PILLS[selectedPill].cost + "🌿)";
+        }
+
+        function renderFactoryQueue() {
+            var el = document.getElementById('factory-queue-display'); if (!el) return; el.innerHTML = '';
+            for (var i = 0; i < MAX_QUEUE; i++) {
+                var slot = document.createElement('div');
+                var craft = userData.farm.factory.queue[i];
+                slot.className = craft ? (i === 0 ? 'q-slot active-q' : 'q-slot') : 'q-slot';
+                if (craft) {
+                    var pillIdx = (craft.pillType !== undefined) ? craft.pillType : 0;
+                    slot.textContent = PILLS[pillIdx].emoji;
+                }
+                el.appendChild(slot);
+            }
+        }
+
+        function renderFarmUpgrades() {
+            var bs = document.getElementById('btn-upg-speed'); var bf = document.getElementById('btn-upg-furnace');
+            if (!bs || !bf || !userData.farm) return;
+            if (userData.farm.upgrades.speedUp) { bs.textContent = '✓ Mở khóa'; bs.classList.add('owned'); bs.disabled = true; } else { bs.textContent = '5 🏆'; bs.classList.remove('owned'); bs.disabled = false; }
+            if (userData.farm.upgrades.furnaceUp) { bf.textContent = '✓ Mở khóa'; bf.classList.add('owned'); bf.disabled = true; } else { bf.textContent = '10 🏆'; bf.classList.remove('owned'); bf.disabled = false; }
+        }
+
+        function updateFarmResourceDisplay() {
+            var ltEl = document.getElementById('farm-linhthao');
+            var ddEl = document.getElementById('farm-danduo');
+            var pillEl = document.getElementById('farm-selected-pill');
+            if (!userData.farm) return;
+            if (ltEl) ltEl.textContent = userData.farm.linhthao || 0;
+            var total = 0;
+            if (userData.farm.factory && userData.farm.factory.completedPills) {
+                for (var k = 0; k < 5; k++) total += (userData.farm.factory.completedPills[k] || 0);
+            }
+            if (ddEl) ddEl.textContent = total;
+            var selectedPill = userData.farm.factory ? (userData.farm.factory.selectedPill || 0) : 0;
+            if (pillEl) pillEl.textContent = PILLS[selectedPill].name;
+        }
+
+        function startFarmTimer() { if (farmInterval) clearInterval(farmInterval); farmInterval = setInterval(farmTick, 1000); }
+
+        function farmTick() {
+            if (!userData.farm) return;
+            var now = Date.now();
+            var needRerender = false;
+
+            userData.farm.lastSave = now;
+            localStorage.setItem("OppoWaifuDataCloudPro", JSON.stringify(userData));
+
+            userData.farm.plots.forEach(function(plot, i) {
+                if (plot.cropType !== null && !plot.done && plot.plantedAt) {
+                    var dur = getCropDuration(plot.cropType) * 1000;
+                    var elp = now - plot.plantedAt;
+                    if (elp >= dur) {
+                        plot.done = true; needRerender = true;
+                    } else {
+                        var remaining = Math.ceil((dur - elp) / 1000);
+                        var tEl = document.getElementById("pt-" + i);
+                        if (tEl) tEl.textContent = fmt(remaining);
+                        
+                        if (CROPS[plot.cropType].duration >= 3600) {
+                            var lblEl = document.getElementById("pt-lbl-" + i);
+                            if (lblEl) lblEl.textContent = fmtHuman(remaining);
+                        }
+                    }
+                }
+            });
+            if (needRerender) renderFarmPlots();
+            updateFactoryTimerDisplay(now);
+        }
+
+        function updateFactoryTimerDisplay(now) {
+            var el = document.getElementById('factory-timer'); if (!el || !userData.farm) return;
+            var q = userData.farm.factory.queue;
+            if (q.length === 0 || !q[0].startedAt) {
+                el.textContent = '--:--';
+                el.style.color = 'var(--text-muted)';
+                el.style.textShadow = 'none';
+                return;
+            }
+
+            var pillIdx = (q[0].pillType !== undefined) ? q[0].pillType : 0;
+            var dur = getFactoryDuration(pillIdx) * 1000;
+            var elp = now - q[0].startedAt;
+
+            if (pillIdx <= 1) {
+                el.style.color = 'var(--cyan)';
+                el.style.textShadow = '0 0 15px rgba(0,210,255,0.4)';
+            } else if (pillIdx === 2) {
+                el.style.color = 'var(--gold)';
+                el.style.textShadow = '0 0 15px rgba(251,191,36,0.4)';
+            } else {
+                el.style.color = 'var(--purple)';
+                el.style.textShadow = '0 0 20px rgba(157,78,221,0.6)';
+            }
+
+            if (elp >= dur) {
+                userData.farm.factory.completedPills[pillIdx] = (userData.farm.factory.completedPills[pillIdx] || 0) + 1;
+                var nextStart = q[0].startedAt + dur;
+                q.shift();
+                if (q.length > 0 && !q[0].startedAt) q[0].startedAt = nextStart;
+                userData.farm.lastSave = Date.now();
+                localStorage.setItem("OppoWaifuDataCloudPro", JSON.stringify(userData));
+                renderFactoryQueue(); updateFarmResourceDisplay();
+                showFarmStatus("💊 Đan Dược hoàn thành!");
+                updateFactoryTimerDisplay(Date.now());
+            } else {
+                el.textContent = fmt(Math.ceil((dur - elp) / 1000));
+            }
+        }
+
     </script>
 </body>
 </html>
