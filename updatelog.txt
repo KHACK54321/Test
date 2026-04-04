@@ -10,3 +10,6 @@ Version 0.3.0 (4/4/2026)
   Thêm tính năng trồng linh thảo 
   Thêm Tính năng luyện đang dược
   Fix lỗi
+Version 0.3.1 (4/4/2026)
+  Fix lỗi kéo
+  Neff tất cả đang 
