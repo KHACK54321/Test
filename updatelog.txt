@@ -1,15 +1,27 @@
-Version 0.1.0 (31/03/2026)
-Version 0.1.0 (1/4/2026)
+Version M0.1.0 (31/03/2026)
+Version M0.1.0 (1/4/2026)
   Cập nhật lại giao diện load
-Version 0.2.0 (2/4/2026)
+Version M0.2.0 (2/4/2026)
   Chỉnh lại hệ thống nhiệm vụ 
   Chỉnh lại hệ thống điểm danh
   Thêm Tính năng thành tựu +buff exp
   Chỉnh lại danh sách cảnh giới
-Version 0.3.0 (4/4/2026)
+Version M0.3.0 (4/4/2026)
   Thêm tính năng trồng linh thảo 
   Thêm Tính năng luyện đang dược
   Fix lỗi
-Version 0.3.1 (4/4/2026)
+Version M0.3.1 (4/4/2026)
   Fix lỗi kéo
   Neff tất cả đang 
+Version B0.4.0 (8/4/2026)
+  Chỉnh lại toàn bộ cấu chúc giao diện
+  Thêm tất cả ảnh cho cây trồng và đang dược
+  Thêm đơn vị tiền tệ: Linh thạch
+  Thêm Shop và lò luyện đang kèm ảnh lò luyện
+  Thêm chức nâng afk 
+  Thêm thành tựu mới và buff
+  Thêm nhiều nâng cấp mới cho nông trại
+  Qol cải thiện thao tác
+  Fix tất cả lỗi 99% 💀
+  
+  
