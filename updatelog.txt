@@ -30,5 +30,8 @@ Version M0.5.0 (10/4/2026)
   Chỉnh lại 1 số nâng cấp và thêm nâng cấp
   Thêm linh túi 
   Fix tất cả lỗi
+Version SM0.5.1 (10/4/2026)
+  Fix các lỗi giao diện và dữ liệu
+  Chỉnh lại hiển thị và mô tả
   
   
