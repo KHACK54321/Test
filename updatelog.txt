@@ -35,5 +35,9 @@ Version SM0.5.1 (10/4/2026)
 Version SM0.5.2 (10/4/2026)
   Fix các lỗi giao diện và dữ liệu
   Chỉnh lại hiển thị và mô tả
+Version M0.5.3 (10/4/2026) ✅  
+  Chỉnh lại cơ chế afk lần 2
+  Thêm nâng cấp cho afk
+  Fix lỗi sikibidi 🗿
   
   
