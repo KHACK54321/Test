@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-    <title>Hệ Thống v0.4.0 (Beta)</title>
+    <title>Hệ Thống v0.5.2 (Pro)</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Courier+Prime&family=Inter:wght@300;400;500;600;700&display=swap');
         :root {
@@ -133,9 +133,9 @@
             -webkit-background-clip:text;-webkit-text-fill-color:transparent;margin:10px 0;line-height:1.3;}
         
         /* ── TASK ── */
-        .task-row{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.03);
-            padding:13px 14px;border-radius:12px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.05);transition:background 0.2s;}
-        .task-row:active{background:rgba(255,255,255,0.06);}
+        .task-row{display:flex;justify-content:space-between;align-items:center;background:rgba(255,255,255,0.02);
+            padding:13px 14px;border-radius:12px;margin-bottom:10px;border:1px solid rgba(255,255,255,0.04);transition:background 0.2s;}
+        .task-row:active{background:rgba(255,255,255,0.05);}
         .task-info{display:flex;flex-direction:column;flex:1;padding-right:10px;}
         .task-title{font-size:13px;color:#fff;font-weight:500;margin-bottom:3px;line-height:1.4;}
         .task-prog{font-size:12px;color:var(--cyan);font-weight:500;}
@@ -167,11 +167,8 @@
         @keyframes shimmer{0%{left:-100%;}100%{left:200%;}}
 
         /* ── BUFF TEXT ── */
-        .buff-text{font-weight:700;font-size:15px;}
-        .buff-10{color:var(--text-main);}
-        .buff-11{color:#fbbf24;}
-        .buff-12{color:#f97316;}
-        .buff-13p{color:#ef4444;}
+        .buff-text{font-weight:700;font-size:14px;}
+        .buff-val{color:var(--success);}
         .achievement-icon{width:28px;height:28px;vertical-align:middle;margin-left:8px;
             filter:drop-shadow(0 2px 4px rgba(0,0,0,0.3));}
         .flex-row{display:flex;justify-content:space-between;align-items:center;margin-top:12px;gap:10px;}
@@ -331,17 +328,6 @@
         .meditation-timer-display{font-size:48px;font-weight:700;color:var(--cyan);
             font-family:'Courier Prime',monospace;text-align:center;margin:20px 0;
             text-shadow:0 0 30px rgba(0,210,255,0.4);letter-spacing:4px;}
-        .med-btn-row{display:flex;gap:8px;justify-content:center;margin-bottom:16px;flex-wrap:wrap;}
-        .med-time-btn{padding:10px 18px;border-radius:12px;border:1px solid rgba(0,210,255,0.25);
-            background:rgba(0,210,255,0.07);color:var(--cyan);font-size:13px;font-weight:600;
-            cursor:pointer;font-family:inherit;transition:all 0.2s;min-height:44px;}
-        .med-time-btn.active{background:rgba(0,210,255,0.2);border-color:var(--cyan);}
-        .med-time-btn:active{transform:scale(0.96);}
-        .med-progress-ring{display:flex;justify-content:center;margin:10px 0;}
-        .med-streak-bar{display:flex;gap:6px;justify-content:center;margin-top:10px;flex-wrap:wrap;}
-        .med-streak-dot{width:12px;height:12px;border-radius:50%;background:rgba(255,255,255,0.1);
-            border:1px solid rgba(255,255,255,0.15);transition:all 0.3s;}
-        .med-streak-dot.done{background:var(--cyan);border-color:var(--cyan);box-shadow:0 0 6px rgba(0,210,255,0.5);}
 
         /* ════════════════════════════════════════
            ACHIEVEMENTS TAB
@@ -356,7 +342,7 @@
         .ach-name{font-size:12px;font-weight:700;color:#fff;margin-bottom:4px;line-height:1.3;}
         .ach-desc{font-size:10px;color:var(--text-muted);line-height:1.4;}
         .ach-buff{font-size:10px;color:var(--gold);font-weight:600;margin-top:6px;}
-        .ach-locked{filter:grayscale(1);opacity:0.5;}
+        .ach-locked{filter:grayscale(1);opacity:0.45;}
 
         /* ════════════════════════════════════════
            MINECRAFT ACHIEVEMENT TOAST
@@ -412,13 +398,11 @@
 </head>
 <body>
 
-<!-- ════════ LOADER ════════ -->
 <div id="loader">
     <div class="avatar-container"><img src="" class="rotating-avatar" id="loader-img" alt="System Loader"></div>
     <div id="hacker-log"></div>
 </div>
 
-<!-- ════════ MC ACHIEVEMENT TOAST ════════ -->
 <div id="mc-achievement">
     <div class="mc-icon" id="mc-icon">🏆</div>
     <div>
@@ -428,49 +412,48 @@
     </div>
 </div>
 
-<!-- ════════ TOAST CONTAINER ════════ -->
 <div id="toast-container"></div>
 
-<!-- ════════ MAIN APP ════════ -->
 <div id="main-app">
-    <!-- Hamburger -->
     <button class="hamburger-btn" onclick="toggleDrawer()">☰</button>
 
-    <!-- Drawer Overlay -->
     <div id="drawer-overlay" onclick="closeDrawer()"></div>
 
-    <!-- Side Drawer -->
     <div id="side-drawer">
         <div class="drawer-header">⚔ Hệ Thống ⚔</div>
         <div id="drawer-nav">
-            <div class="drawer-item active" id="dnav-tab-checkin" onclick="showTab('tab-checkin','tab-checkin')">
+            <div class="drawer-item active" id="dnav-tab-checkin" onclick="showTab('tab-checkin')">
                 <span class="di-icon">📅</span><span>Ký Danh</span>
             </div>
-            <div class="drawer-item" id="dnav-tab-tasks" onclick="showTab('tab-tasks','tab-tasks')">
+            <div class="drawer-item" id="dnav-tab-tasks" onclick="showTab('tab-tasks')">
                 <span class="di-icon">📋</span><span>Nhiệm Vụ</span>
             </div>
-            <div class="drawer-item" id="dnav-tab-realm" onclick="showTab('tab-realm','tab-realm')">
+            <div class="drawer-item" id="dnav-tab-realm" onclick="showTab('tab-realm')">
                 <span class="di-icon">⚔️</span><span>Tu Vi</span>
             </div>
-            <div class="drawer-item" id="dnav-tab-meditation" onclick="showTab('tab-meditation','tab-meditation')">
+            <div class="drawer-item" id="dnav-tab-meditation" onclick="showTab('tab-meditation')">
                 <span class="di-icon">💤</span><span>Treo AFK</span>
             </div>
-            <div class="drawer-item" id="dnav-tab-farm" onclick="showTab('tab-farm','tab-farm')">
+            <div class="drawer-item" id="dnav-tab-farm" onclick="showTab('tab-farm')">
                 <span class="di-icon">🌾</span><span>Nông Trại</span>
             </div>
-            <div class="drawer-item" id="dnav-tab-achievements" onclick="showTab('tab-achievements','tab-achievements')">
+            <div class="drawer-item" id="dnav-tab-shop-pb" onclick="showTab('tab-shop-pb')">
+                <span class="di-icon">🏪</span><span>Tiệm Pháp Bảo</span>
+            </div>
+            <div class="drawer-item" id="dnav-tab-inventory-pb" onclick="showTab('tab-inventory-pb')">
+                <span class="di-icon">🎒</span><span>Linh Túi</span>
+            </div>
+            <div class="drawer-item" id="dnav-tab-achievements" onclick="showTab('tab-achievements')">
                 <span class="di-icon">🏆</span><span>Thành Tựu</span>
             </div>
-            <div class="drawer-item" id="dnav-tab-system" onclick="showTab('tab-system','tab-system')">
+            <div class="drawer-item" id="dnav-tab-system" onclick="showTab('tab-system')">
                 <span class="di-icon">⚙️</span><span>Hệ Thống</span>
             </div>
         </div>
     </div>
 
-    <!-- App Header -->
     <div class="app-header">⚔ Hệ Thống ⚔</div>
 
-    <!-- Global Resource Bar -->
     <div class="global-res-bar">
         <div class="gres">
             <img src="img/linhthach.png" class="gres-icon" style="width:20px;height:20px;object-fit:contain;" alt="💎" onerror="this.outerHTML='<span class=\'gres-icon\'>💎</span>'">
@@ -495,10 +478,8 @@
         </div>
     </div>
 
-    <!-- Tab Container -->
     <div class="tab-container" id="main-scroll">
 
-        <!-- ══════ KÝ DANH ══════ -->
         <div id="tab-checkin" class="tab-content active">
             <div class="card">
                 <div class="card-header">
@@ -507,7 +488,7 @@
                 <p>Reset vào 00:00 hàng ngày. Bỏ lỡ 1 ngày sẽ mất chuỗi và xóa Buff.</p>
                 <div class="flex-row" style="margin:18px 0;">
                     <div class="stat-box"><span class="num" id="consecutive-days">0</span><span class="lbl">Chuỗi Ngày</span></div>
-                    <div class="stat-box"><span class="num" id="buff-checkin-display">1.0x</span><span class="lbl">Buff Chuỗi</span></div>
+                    <div class="stat-box"><span class="num" id="buff-checkin-display">+0%</span><span class="lbl">Buff Chuỗi</span></div>
                 </div>
                 <button id="btn-checkin" class="action-btn main-btn" onclick="dailyCheckIn()">Ký danh nhận thưởng</button>
             </div>
@@ -520,7 +501,6 @@
             </div>
         </div>
 
-        <!-- ══════ NHIỆM VỤ ══════ -->
         <div id="tab-tasks" class="tab-content">
             <div class="card">
                 <h3>Nhiệm vụ Ngày (Random)</h3>
@@ -547,7 +527,6 @@
             </div>
         </div>
 
-        <!-- ══════ TU VI ══════ -->
         <div id="tab-realm" class="tab-content">
             <div class="card">
                 <div class="card-header">
@@ -561,20 +540,42 @@
                 <div class="progress-bar"><div class="progress" id="exp-bar"></div></div>
             </div>
             <div class="card">
-                <h3>Hiệu Ứng Trợ Công (Buffs)</h3>
-                <p>Hệ số nhân dồn (Multiplicative) trên mọi nguồn Tu Vi.</p>
-                <div class="task-row" style="margin-top:12px;"><span style="font-size:13px;font-weight:500;">Buff Chuỗi Điểm Danh</span><span id="buff-checkin" class="buff-text buff-10">1.0x</span></div>
-                <div class="task-row"><span style="font-size:13px;font-weight:500;">Buff Thành Tích Ngày</span><span id="buff-daily" class="buff-text buff-10">1.0x</span></div>
-                <div class="task-row"><span style="font-size:13px;font-weight:500;">Buff Thành Tích Tuần</span><span id="buff-weekly" class="buff-text buff-10">1.0x</span></div>
-                <div class="task-row"><span style="font-size:13px;font-weight:500;">Buff Luyện Đan (Thành Tựu)</span><span id="buff-alchemy-ach" class="buff-text buff-10">1.0x</span></div>
-                <div class="task-row"><span style="font-size:13px;font-weight:500;">Buff Bán Cây (Thành Tựu)</span><span id="buff-sell-ach" class="buff-text buff-10">1.0x</span></div>
+                <div class="card-header" style="margin-bottom:6px;">
+                    <h3 style="margin:0;color:#fff;">HIỆU ỨNG TRỢ CÔNG (BUFFS)</h3>
+                </div>
+                <p style="font-size:11px; margin-bottom:12px;">Hệ số cộng dồn (Additive) để chống lạm phát.</p>
+                
+                <div class="task-row">
+                    <span style="font-size:13px;font-weight:500;">Buff Chuỗi Điểm Danh</span>
+                    <span id="buff-checkin" class="buff-text buff-val">+0%</span>
+                </div>
+                <div class="task-row">
+                    <span style="font-size:13px;font-weight:500;">Buff Thành Tích Ngày</span>
+                    <span id="buff-daily" class="buff-text buff-val">+0%</span>
+                </div>
+                <div class="task-row">
+                    <span style="font-size:13px;font-weight:500;">Buff Thành Tích Tuần</span>
+                    <span id="buff-weekly" class="buff-text buff-val">+0%</span>
+                </div>
+                <div class="task-row">
+                    <span style="font-size:13px;font-weight:500;">Buff Luyện Đan (Thành Tựu)</span>
+                    <span id="buff-alchemy-ach" class="buff-text buff-val">+0%</span>
+                </div>
+                <div class="task-row">
+                    <span style="font-size:13px;font-weight:500;">Buff Bán Cây (Thành Tựu)</span>
+                    <span id="buff-sell-ach" class="buff-text buff-val">+0%</span>
+                </div>
+                <div class="task-row">
+                    <span style="font-size:13px;font-weight:500;color:var(--purple);">Buff Pháp Bảo Tu Vi</span>
+                    <span id="buff-phaobao" class="buff-text" style="color:var(--purple);">+0%</span>
+                </div>
+                
                 <div class="card-header" style="margin-top:14px;padding-bottom:0;border:none;">
-                    <h2 style="color:var(--cyan);">TỔNG HỆ SỐ</h2><span id="buff-total" style="color:var(--green);font-size:22px;font-weight:700;">1.0x</span>
+                    <h2 style="color:var(--cyan);">TỔNG HỆ SỐ</h2><span id="buff-total" style="color:var(--green);font-size:22px;font-weight:700;">1.00x</span>
                 </div>
             </div>
         </div>
 
-        <!-- ══════ TREO AFK ══════ -->
         <div id="tab-meditation" class="tab-content">
             <div class="card">
                 <div class="card-header">
@@ -584,35 +585,25 @@
                         <span id="med-lt-display" style="font-size:13px;font-weight:700;color:var(--cyan);">0 💎</span>
                     </div>
                 </div>
-                <p>Treo máy offline để kiếm Linh Thạch 💎. Tối đa <strong>3 lần/ngày</strong>. Chuỗi 3+ ngày nhận ×1.5 thưởng.</p>
+                <p>Tự động thu thập Linh Thạch khi bạn đóng hoặc ẩn ứng dụng (Tối đa 8 giờ mỗi lần).</p>
                 <div class="flex-row" style="margin-top:10px;">
-                    <div class="stat-box"><span class="num" id="med-today">0</span><span class="lbl">Hôm Nay / 3</span></div>
-                    <div class="stat-box"><span class="num streak-active" id="med-streak">0</span><span class="lbl">Chuỗi (ngày)</span></div>
+                    <div class="stat-box"><span class="num" id="afk-rate">1.0</span><span class="lbl">Tốc độ (💎/phút)</span></div>
+                    <div class="stat-box"><span class="num" style="color:var(--gold);">8h</span><span class="lbl">Tối đa</span></div>
                 </div>
-                <div class="med-streak-bar" id="med-streak-dots"></div>
             </div>
             <div class="card">
-                <h3>Chọn thời gian treo AFK</h3>
-                <div class="med-btn-row">
-                    <button class="med-time-btn active" id="med-btn-5" onclick="selectMedTime(5,this)">5 phút<br><small style="font-size:10px;color:var(--text-muted);">+5 💎</small></button>
-                    <button class="med-time-btn" id="med-btn-10" onclick="selectMedTime(10,this)">10 phút<br><small style="font-size:10px;color:var(--text-muted);">+12 💎</small></button>
-                    <button class="med-time-btn" id="med-btn-15" onclick="selectMedTime(15,this)">15 phút<br><small style="font-size:10px;color:var(--text-muted);">+20 💎</small></button>
-                </div>
-                <div class="meditation-timer-display" id="med-timer">05:00</div>
-                <div style="text-align:center;font-size:11px;color:var(--text-muted);margin-bottom:10px;" id="med-bonus-info">Nhận +5 💎 sau khi hoàn thành</div>
-                <button class="action-btn main-btn" id="med-start-btn" onclick="toggleMeditation()">▶ Bắt Đầu AFK</button>
-                <button class="action-btn main-btn danger-btn" id="med-cancel-btn" onclick="cancelMeditation()" style="display:none;">✕ Huỷ AFK</button>
+                <h3>Trạng Thái AFK</h3>
+                <div class="meditation-timer-display" id="afk-status-timer" style="font-size:24px;">Đang Tương Tác</div>
+                <div style="text-align:center;font-size:11px;color:var(--text-muted);margin-bottom:10px;" id="afk-last-seen-info">Sẽ tự động treo máy khi ẩn trang.</div>
             </div>
             <div class="card">
-                <h3>Bonus Treo Máy</h3>
-                <div class="task-row"><span style="font-size:13px;">Chuỗi ≥ 3 ngày</span><span style="color:var(--gold);font-weight:700;">×1.5 💎</span></div>
-                <div class="task-row"><span style="font-size:13px;">Buff Thành Tựu AFK</span><span id="buff-med-ach" style="color:var(--cyan);font-weight:700;">×1.0</span></div>
+                <h3>Bonus Treo Máy (Cộng Dồn)</h3>
+                <div class="task-row"><span style="font-size:13px;">Buff Thành Tựu AFK</span><span id="buff-med-ach" style="color:var(--cyan);font-weight:700;">+0%</span></div>
+                <div class="task-row"><span style="font-size:13px;color:var(--purple);">Buff Pháp Bảo AFK</span><span id="buff-med-phaobao" style="color:var(--purple);font-weight:700;">+0%</span></div>
             </div>
         </div>
 
-        <!-- ══════ NÔNG TRẠI ══════ -->
         <div id="tab-farm" class="tab-content">
-            <!-- Farm Resource Bar -->
             <div class="farm-resource-bar">
                 <div class="farm-res">
                     <span class="ricon">🌿</span>
@@ -638,7 +629,6 @@
             </div>
             <div class="farm-status" id="farm-status"></div>
 
-            <!-- Farm Sub Navigation -->
             <div class="farm-sub-nav">
                 <button class="farm-sub-btn active" onclick="showFarmTab('ruong',this)">🌾 Ruộng</button>
                 <button class="farm-sub-btn" onclick="showFarmTab('lo',this)">⚗️ Lò Luyện</button>
@@ -647,7 +637,6 @@
                 <button class="farm-sub-btn" onclick="showFarmTab('nangcap',this)">⬆️ Nâng Cấp</button>
             </div>
 
-            <!-- RUỘNG -->
             <div class="farm-sub-tab-content active" id="farm-sub-ruong">
                 <div class="card">
                     <div class="card-header">
@@ -659,7 +648,6 @@
                 </div>
             </div>
 
-            <!-- LÒ LUYỆN -->
             <div class="farm-sub-tab-content" id="farm-sub-lo">
                 <div class="factory-section">
                     <h3>⚗️ Lò Luyện Đan</h3>
@@ -680,7 +668,6 @@
                 </div>
             </div>
 
-            <!-- KHO CHỨA -->
             <div class="farm-sub-tab-content" id="farm-sub-kho">
                 <div class="card">
                     <div class="card-header">
@@ -692,7 +679,6 @@
                 </div>
             </div>
 
-            <!-- SHOP -->
             <div class="farm-sub-tab-content" id="farm-sub-shop">
                 <div class="card">
                     <div class="card-header">
@@ -704,12 +690,11 @@
                 </div>
             </div>
 
-            <!-- NÂNG CẤP -->
             <div class="farm-sub-tab-content" id="farm-sub-nangcap">
                 <div class="card">
                     <h3>⬆️ Nâng Cấp Cổ Xưa (Danh Vọng 🏆)</h3>
                     <div class="upgrade-row" style="margin-top:14px;">
-                        <div class="upgrade-info"><div class="upgrade-name">🌱 Tốc độ tăng trưởng</div><div class="upgrade-desc">Giảm 20% thời gian trồng cây</div></div>
+                        <div class="upgrade-info"><div class="upgrade-name">🌱 Tốc độ sinh trưởng</div><div class="upgrade-desc">Giảm 20% thời gian trồng cây</div></div>
                         <button class="upg-btn" id="btn-upg-speed" onclick="buyUpgrade('speedUp',5)">5 🏆</button>
                     </div>
                     <div class="upgrade-row">
@@ -718,36 +703,47 @@
                     </div>
                 </div>
                 <div class="card">
-                    <h3>✨ Nâng Cấp Mới (Linh Thạch 💎)</h3>
+                    <h3>✨ Nâng Cấp Hệ Thống (Linh Thạch 💎)</h3>
                     <div id="new-upgrades-container"></div>
                 </div>
             </div>
         </div>
 
-        <!-- ══════ THÀNH TỰU ══════ -->
+        <div id="tab-shop-pb" class="tab-content">
+            <div class="card">
+                <div class="card-header"><h2>🏪 Cửa Hàng Pháp Bảo</h2><span style="color:var(--cyan);">💎 <span id="shop-pb-lt">0</span></span></div>
+                <p>Mua Pháp bảo tăng cực mạnh chỉ số. Mua xong hãy vào Linh Túi để trang bị.</p>
+                <div id="shop-pb-list"></div>
+            </div>
+        </div>
+
+        <div id="tab-inventory-pb" class="tab-content">
+            <div class="card">
+                <div class="card-header"><h2>🎒 Linh Túi (Trang Bị)</h2><span id="pb-equip-count" style="color:var(--gold);font-weight:700;">0/5</span></div>
+                <p>Tối đa trang bị <strong>5 pháp bảo</strong>. Các chỉ số được cộng dồn (Additive) để tránh lạm phát.</p>
+                <div id="equipped-pb-list" style="margin-bottom:15px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:10px;"></div>
+                <h3>Kho chứa</h3>
+                <div id="inventory-pb-list"></div>
+            </div>
+        </div>
+
         <div id="tab-achievements" class="tab-content">
             <div class="card">
                 <div class="card-header">
                     <h2>🏆 Thành Tựu</h2>
-                    <span id="ach-count" style="font-size:12px;color:var(--gold);font-weight:700;">0/9</span>
+                    <span id="ach-count" style="font-size:12px;color:var(--gold);font-weight:700;">0/18</span>
                 </div>
-                <p>Hoàn thành để nhận buff cộng dồn. Tất cả buff nhân với nhau (multiplicative).</p>
+                <p>Chỉ số cộng dồn (Additive) bảo vệ nền kinh tế game.</p>
             </div>
-            <div class="card">
-                <h3>🌾 Trồng Cây</h3>
-                <div class="ach-grid" id="ach-farm-grid"></div>
-            </div>
-            <div class="card">
-                <h3>💊 Luyện Đan</h3>
-                <div class="ach-grid" id="ach-alchemy-grid"></div>
-            </div>
-            <div class="card">
-                <h3>🧘 Thiền Định</h3>
-                <div class="ach-grid" id="ach-med-grid"></div>
-            </div>
+            
+            <div class="card"><h3>📅 Chuỗi Ký Danh</h3><div class="ach-grid" id="ach-ci-grid"></div></div>
+            <div class="card"><h3>📋 Nhiệm Vụ Ngày</h3><div class="ach-grid" id="ach-daily-grid"></div></div>
+            <div class="card"><h3>🏆 Nhiệm Vụ Tuần</h3><div class="ach-grid" id="ach-weekly-grid"></div></div>
+            <div class="card"><h3>🌾 Nông Dân</h3><div class="ach-grid" id="ach-farm-grid"></div></div>
+            <div class="card"><h3>💊 Luyện Đan</h3><div class="ach-grid" id="ach-alchemy-grid"></div></div>
+            <div class="card"><h3>💤 Treo Máy</h3><div class="ach-grid" id="ach-med-grid"></div></div>
         </div>
 
-        <!-- ══════ HỆ THỐNG ══════ -->
         <div id="tab-system" class="tab-content">
             <div class="card">
                 <div class="card-header"><h2>Nhật ký cập nhật</h2><button class="action-btn" onclick="fetchUpdateLog()" style="padding:8px 12px;font-size:11px;min-height:36px;">Làm Mới</button></div>
@@ -764,10 +760,7 @@
             </div>
         </div>
 
-    </div><!-- end tab-container -->
-
-    <!-- Scroll Toolbar -->
-    <div id="scroll-toolbar">
+    </div><div id="scroll-toolbar">
         <button class="stb-btn" onclick="scrollToTop()" title="Về đầu trang">▲</button>
         <button class="stb-btn" id="stb-toggle" onclick="toggleScrollTb()" title="Ẩn/hiện">≡</button>
     </div>
@@ -777,7 +770,7 @@
 // ════════════════════════════════════════════
 // CONSTANTS
 // ════════════════════════════════════════════
-var APP_VERSION    = "0.4.0"; // Updated version
+var APP_VERSION    = "0.5.2"; 
 var SCHEMA_VERSION = 2;
 var SAVE_KEY       = "OppoWaifuDataCloudPro";
 
@@ -804,7 +797,6 @@ const realms = [
     { name:"Vấn Đỉnh Đại Viên Mãn",maxExp:300000 },{ name:"Cảnh Giới Quá Độ Âm Hư",maxExp:400000 },{ name:"Cảnh Giới Quá Độ Dương Thực",maxExp:500000 }
 ];
 
-// Cây trồng -> Đều dùng ảnh trong.png (Phân biệt qua Emoji/Tên)
 const CROPS = [
     { name:"Tụ Linh Thảo",   img:"img/tulinhthao.png",  emoji:"🌿", duration:3600,   yield:20,   sellPrice:2,   desc:"1h · +20🌿 · 2💎" },
     { name:"Thanh Tâm Thảo", img:"img/thanhtamthao.png",  emoji:"🍃", duration:14400,  yield:80,   sellPrice:5,   desc:"4h · +80🌿 · 5💎" },
@@ -813,7 +805,6 @@ const CROPS = [
     { name:"Ngũ Sắc Thảo",   img:"img/ngusacthao.png",  emoji:"🌈", duration:604800, yield:5000, sellPrice:50,  desc:"7 ngày · +5000🌿 · 50💎" },
 ];
 
-// Đan Dược -> Dùng dang_1.png đến dang_5.png
 const PILLS = [
     { name:"Tụ Linh Đan",   img:"img/dang_1.png", emoji:"🟢", cost:30,   craftDuration:7200,   exp:100 },
     { name:"Hồi Linh Đan",  img:"img/dang_2.png", emoji:"🟣", cost:100,  craftDuration:21600,  exp:400 },
@@ -822,31 +813,67 @@ const PILLS = [
     { name:"Sinh Cơ Đan",   img:"img/dang_5.png", emoji:"🟩", cost:2000, craftDuration:604800, exp:15000 }
 ];
 
-// Lò Luyện -> loluyen1.png đến loluyen3.png
 const FURNACES = [
     { name:"Lò Thạch Cơ",   img:"img/loluyen_1.png", price:100, timeRed:0.20, expBonus:1.0,  desc:"Giảm 20% thời gian luyện" },
     { name:"Lò Huyền Thiết", img:"img/loluyen_2.png", price:300, timeRed:0.35, expBonus:1.25, desc:"Giảm 35% · +25% EXP đan" },
     { name:"Lò Long Uyên",   img:"img/loluyen_3.png", price:800, timeRed:0.50, expBonus:1.60, desc:"Giảm 50% · +60% EXP đan" }
 ];
 
+// Nâng cấp: Chuyển sang cộng dồn, thêm Hệ thống Thủy lợi
 const FARM_UPGRADES2 = [
     { id:'plotSlot',  name:'🌱 Mở rộng ô Trồng',     desc:'+1 ô trồng cây (tối đa 8 ô)',         maxLevel:5, baseCost:30,  costMult:1.8 },
     { id:'queueSlot', name:'⚗️ Mở rộng ô Luyện Đan', desc:'+1 slot hàng chờ (tối đa 10 slot)',   maxLevel:5, baseCost:50,  costMult:2.0 },
-    { id:'craftAll',  name:'🔄 Luyện Tất Cả',          desc:'Mở nút luyện toàn bộ slot trống',    maxLevel:1, baseCost:200, costMult:1 },
-    { id:'cropSpeed', name:'⚡ Tốc Độ Trồng',          desc:'Giảm 10% thời gian trồng/cấp (≤5)',  maxLevel:5, baseCost:40,  costMult:2.0 },
+    { id:'craftAll',  name:'🔄 Luyện Tất Cả',          desc:'Nâng cấp luyện đan song song',    maxLevel:1, baseCost:200, costMult:1 },
+    { id:'cropSpeed', name:'⚡ Tốc Độ Trồng',          desc:'Giảm 5% thời gian trồng/cấp (≤5)',   maxLevel:5, baseCost:40,  costMult:2.0 },
+    { id:'waterSys',  name:'💧 Thủy Lợi Nông Trại',    desc:'Giảm 5% thời gian trồng/cấp (≤5)',   maxLevel:5, baseCost:100, costMult:2.0 }, // Cập nhật mới
     { id:'sellBonus', name:'💰 Bội Thu',               desc:'+15% Linh Thạch khi bán cây/cấp (≤5)',maxLevel:5, baseCost:60, costMult:1.5 }
 ];
 
+// Chuyển toàn bộ Thành Tựu sang Hệ số ADDITIVE (bonus)
 const ACHIEVEMENTS = [
-    { id:'plant_100',    name:'Nông Dân Tập Sự',    desc:'Thu hoạch 100 cây',    icon:'🌾', buff:'sellBonus',      mult:1.1, check:function(d){return (d.totalCropsHarvested||0)>=100;} },
-    { id:'plant_500',    name:'Nông Dân Lành Nghề', desc:'Thu hoạch 500 cây',    icon:'🌿', buff:'sellBonus',      mult:1.2, check:function(d){return (d.totalCropsHarvested||0)>=500;} },
-    { id:'plant_1000',   name:'Đại Nông Phu',        desc:'Thu hoạch 1000 cây',  icon:'🏅', buff:'sellBonus',      mult:1.3, check:function(d){return (d.totalCropsHarvested||0)>=1000;} },
-    { id:'alchemy_100',  name:'Luyện Đan Sơ Cấp',   desc:'Luyện 100 đan dược',  icon:'💊', buff:'alchemyExp',     mult:1.1, check:function(d){return (d.totalAlchemyDone||0)>=100;} },
-    { id:'alchemy_200',  name:'Luyện Đan Trung Cấp', desc:'Luyện 200 đan dược', icon:'🌀', buff:'alchemyExp',     mult:1.2, check:function(d){return (d.totalAlchemyDone||0)>=200;} },
-    { id:'alchemy_500',  name:'Luyện Đan Đại Thành', desc:'Luyện 500 đan dược', icon:'✨', buff:'alchemyExp',     mult:1.3, check:function(d){return (d.totalAlchemyDone||0)>=500;} },
-    { id:'med_streak_3', name:'Tâm Tĩnh',           desc:'Streak thiền 3 ngày', icon:'🧘', buff:'meditationBonus',mult:1.1, check:function(d){return (d.meditation&&d.meditation.streak||0)>=3;} },
-    { id:'med_streak_7', name:'Tâm Định',            desc:'Streak thiền 7 ngày', icon:'🌙', buff:'meditationBonus',mult:1.2, check:function(d){return (d.meditation&&d.meditation.streak||0)>=7;} },
-    { id:'med_streak_30',name:'Đại Định',            desc:'Streak thiền 30 ngày',icon:'⭐', buff:'meditationBonus',mult:1.5, check:function(d){return (d.meditation&&d.meditation.streak||0)>=30;} }
+    // Điểm danh
+    { id:'ci_30', name:'Sơ Nhập', desc:'Ký danh 30 ngày', icon:'📅', buff:'checkin', bonus:0.1, check:d=>d.checkinStreak>=30 },
+    { id:'ci_100', name:'Kiên Trì', desc:'Ký danh 100 ngày', icon:'🔥', buff:'checkin', bonus:0.2, check:d=>d.checkinStreak>=100 },
+    { id:'ci_356', name:'Khổ Tu', desc:'Ký danh 356 ngày', icon:'🌟', buff:'checkin', bonus:0.3, check:d=>d.checkinStreak>=356 },
+    // NV Ngày
+    { id:'d_10', name:'Chăm Chỉ I', desc:'Làm 10 NV Ngày', icon:'📋', buff:'daily', bonus:0.1, check:d=>d.totalDailyTasksDone>=10 },
+    { id:'d_50', name:'Chăm Chỉ II', desc:'Làm 50 NV Ngày', icon:'📋', buff:'daily', bonus:0.2, check:d=>d.totalDailyTasksDone>=50 },
+    { id:'d_100', name:'Chăm Chỉ III', desc:'Làm 100 NV Ngày', icon:'📋', buff:'daily', bonus:0.3, check:d=>d.totalDailyTasksDone>=100 },
+    { id:'d_250', name:'Chăm Chỉ IV', desc:'Làm 250 NV Ngày', icon:'📋', buff:'daily', bonus:0.4, check:d=>d.totalDailyTasksDone>=250 },
+    // NV Tuần
+    { id:'w_5', name:'Trụ Cột I', desc:'Làm 5 NV Tuần', icon:'🏆', buff:'weekly', bonus:0.1, check:d=>d.totalWeeklyTasksDone>=5 },
+    { id:'w_10', name:'Trụ Cột II', desc:'Làm 10 NV Tuần', icon:'🏆', buff:'weekly', bonus:0.2, check:d=>d.totalWeeklyTasksDone>=10 },
+    { id:'w_50', name:'Trụ Cột III', desc:'Làm 50 NV Tuần', icon:'🏆', buff:'weekly', bonus:0.4, check:d=>d.totalWeeklyTasksDone>=50 },
+    // Farm
+    { id:'plant_100',  name:'Nông Dân Tập Sự', desc:'Thu 100 cây', icon:'🌾', buff:'farmSell', bonus:0.1, check:d=>(d.totalCropsHarvested||0)>=100 },
+    { id:'plant_500',  name:'Nông Dân Lành Nghề', desc:'Thu 500 cây', icon:'🌿', buff:'farmSell', bonus:0.2, check:d=>(d.totalCropsHarvested||0)>=500 },
+    { id:'plant_1000', name:'Đại Nông Phu', desc:'Thu 1000 cây', icon:'🏅', buff:'farmSell', bonus:0.3, check:d=>(d.totalCropsHarvested||0)>=1000 },
+    // Alchemy
+    { id:'alc_100', name:'Luyện Đan Sơ Cấp', desc:'Luyện 100 đan', icon:'💊', buff:'alchemy', bonus:0.1, check:d=>(d.totalAlchemyDone||0)>=100 },
+    { id:'alc_200', name:'Luyện Đan Trung Cấp', desc:'Luyện 200 đan', icon:'🌀', buff:'alchemy', bonus:0.2, check:d=>(d.totalAlchemyDone||0)>=200 },
+    { id:'alc_500', name:'Luyện Đan Đại Thành', desc:'Luyện 500 đan', icon:'✨', buff:'alchemy', bonus:0.3, check:d=>(d.totalAlchemyDone||0)>=500 },
+    // AFK
+    { id:'med_3',  name:'Tâm Tĩnh', desc:'Streak thiền 3 ngày', icon:'🧘', buff:'meditation', bonus:0.1, check:d=>(d.meditation&&d.meditation.streak||0)>=3 },
+    { id:'med_7',  name:'Tâm Định', desc:'Streak thiền 7 ngày', icon:'🌙', buff:'meditation', bonus:0.2, check:d=>(d.meditation&&d.meditation.streak||0)>=7 },
+    { id:'med_30', name:'Đại Định', desc:'Streak thiền 30 ngày', icon:'⭐', buff:'meditation', bonus:0.4, check:d=>(d.meditation&&d.meditation.streak||0)>=30 }
+];
+
+// Hệ thống 10 Pháp Bảo (Cộng dồn)
+const PHAP_BAO_DATA = [
+    // Tu Vi (3)
+    { id: 'thap', type:'tuvi', name: "Tụ Linh Tháp", emoji: "🗼", price: 2000, bonus: 0.3, desc: "+30% Tu Vi (Mọi nguồn)" },
+    { id: 'kinh', type:'tuvi', name: "Càn Khôn Kính", emoji: "🪞", price: 8000, bonus: 0.6, desc: "+60% Tu Vi (Mọi nguồn)" },
+    { id: 'chau', type:'tuvi', name: "Hỗn Nguyên Châu", emoji: "🔮", price: 25000, bonus: 1.0, desc: "+100% Tu Vi (Mọi nguồn)" },
+    // AFK (3)
+    { id: 'tram', type:'afk', name: "An Thần Hương", emoji: "🎋", price: 1500, bonus: 0.5, desc: "+50% Linh Thạch AFK" },
+    { id: 'doan', type:'afk', name: "Thanh Tâm Bồ Đoàn", emoji: "🪷", price: 6000, bonus: 1.0, desc: "+100% Linh Thạch AFK" },
+    { id: 'coc', type:'afk', name: "Tĩnh Tâm Cốc", emoji: "🏕️", price: 20000, bonus: 2.0, desc: "+200% Linh Thạch AFK" },
+    // Luyện Đan (2)
+    { id: 'dinh', type:'dan', name: "Hỏa Vũ Đỉnh", emoji: "🏺", price: 5000, bonus: 0.3, desc: "+30% Tốc độ & EXP Luyện Đan" },
+    { id: 'batquai', type:'dan', name: "Bát Quái Lò", emoji: "☯️", price: 15000, bonus: 0.6, desc: "+60% Tốc độ & EXP Luyện Đan" },
+    // Nông Trại (2)
+    { id: 'cuoc', type:'farm', name: "Thần Nông Cuốc", emoji: "⛏️", price: 4000, bonus: 0.3, desc: "+30% Sản lượng Bán/Dùng Cây" },
+    { id: 'nuong', type:'farm', name: "Cửu Thiên Tức Nhưỡng", emoji: "🟫", price: 12000, bonus: 0.6, desc: "+60% Sản lượng & +20% Tốc trồng" }
 ];
 
 // ════════════════════════════════════════════
@@ -863,17 +890,13 @@ let userData = {
 let plotSelecting = [false,false,false];
 let farmInterval  = null;
 let currentFarmTab = 'ruong';
-let selectedMedTime = 5;
-let isMeditating = false;
-let meditationRemaining = 300;
-let meditationTimer = null;
 let stbVisible = true;
 let activeDrawerTab = 'tab-checkin';
 
 // ════════════════════════════════════════════
 // BOOT
 // ════════════════════════════════════════════
-const logs = ["> Booting Pro System v0.4.0...", "> Loading Optimized Farm Engine...", "> Initializing Meditation Module...", "> Unlocking Achievement System...", "> System Ready"];
+const logs = ["> Booting Pro System v0.5.2...", "> Rewriting Math to Anti-Inflation Additive Mode...", "> Enabling Parallel Crafting Module...", "> System Ready"];
 let logIdx = 0;
 
 window.onload = function() {
@@ -896,12 +919,9 @@ function initApp() {
     document.getElementById("main-app").style.backgroundImage="url('"+waifuImages[Math.floor(Math.random()*waifuImages.length)]+"')";
     loadData(); initFarmData(); offlineFarmCatchup(); checkResets();
     updateUI(); fetchUpdateLog(); startFarmTimer(); checkForUpdate();
-    renderMeditation(); renderNewUpgrades();
+    renderNewUpgrades();
 }
 
-// ════════════════════════════════════════════
-// VERSION CHECK
-// ════════════════════════════════════════════
 function checkForUpdate() {
     fetch("https://raw.githubusercontent.com/KHACK54321/AX-Project/refs/heads/main/version.txt?v="+Date.now())
         .then(function(r){return r.text();}).then(function(t){
@@ -927,7 +947,7 @@ function closeDrawer() {
     document.getElementById('side-drawer').classList.remove('open');
     document.getElementById('drawer-overlay').classList.remove('open');
 }
-function showTab(tabId, _unused) {
+function showTab(tabId) {
     document.querySelectorAll('.tab-content').forEach(function(c){c.classList.remove('active');});
     document.querySelectorAll('.drawer-item').forEach(function(b){b.classList.remove('active');});
     document.getElementById(tabId).classList.add('active');
@@ -937,6 +957,8 @@ function showTab(tabId, _unused) {
     if(tabId==='tab-farm') renderFarmAll();
     if(tabId==='tab-achievements') renderAchievements();
     if(tabId==='tab-meditation') renderMeditation();
+    if(tabId==='tab-shop-pb') renderShopPB();
+    if(tabId==='tab-inventory-pb') renderInventoryPB();
     var sc=document.getElementById('main-scroll');
     if(sc) sc.scrollTop=0;
     closeDrawer();
@@ -972,9 +994,6 @@ function showToast(msg, type, btnLabel, btnAction) {
     toast.addEventListener('click',function(){clearTimeout(timer);toast.classList.add('dismissing');setTimeout(function(){if(toast.parentNode)toast.remove();},280);});
 }
 
-// ════════════════════════════════════════════
-// MINECRAFT ACHIEVEMENT TOAST
-// ════════════════════════════════════════════
 function showMcAchievement(icon, title, desc) {
     var el=document.getElementById('mc-achievement');
     document.getElementById('mc-icon').textContent=icon;
@@ -1008,10 +1027,17 @@ function migrateData(data) {
         if(typeof data.totalAlchemyDone==='undefined')data.totalAlchemyDone=0;
         if(!data.achievements)data.achievements={};
         if(!data.meditation)data.meditation={today:0,date:'',streak:0,lastFullDate:''};
-        if(!data.farm.upgrades2)data.farm.upgrades2={plotSlot:0,queueSlot:0,craftAll:false,cropSpeed:0,sellBonus:0};
+        if(!data.farm.upgrades2)data.farm.upgrades2={plotSlot:0,queueSlot:0,craftAll:false,cropSpeed:0,sellBonus:0,waterSys:0};
         if(!data.farm.furnaces)data.farm.furnaces={owned:[],active:-1};
         if(!data.farm.inventory)data.farm.inventory={0:0,1:0,2:0,3:0,4:0,5:0};
     }
+    
+    // Setup PB inv
+    if(!data.pbInv || !Array.isArray(data.pbInv)) {
+        data.pbInv = []; data.pbEquipped = [];
+    }
+    if(typeof data.afkLastSeen === 'undefined') data.afkLastSeen = null;
+
     data.schemaVersion=SCHEMA_VERSION;
     return data;
 }
@@ -1075,68 +1101,101 @@ function generateRandomTasks() {
 }
 
 // ════════════════════════════════════════════
-// MULTIPLIERS & BUFFS
+// CENTRALIZED ADDITIVE BONUS SYSTEM (ANTI-INFLATION)
 // ════════════════════════════════════════════
-function getMultipliers() {
-    var m={checkin:1.0,daily:1.0,weekly:1.0,total:1.0};
-    if(userData.checkinStreak>=356)m.checkin=1.3;else if(userData.checkinStreak>=100)m.checkin=1.2;else if(userData.checkinStreak>=30)m.checkin=1.1;
-    if(userData.totalDailyTasksDone>=250)m.daily=1.5;else if(userData.totalDailyTasksDone>=100)m.daily=1.3;else if(userData.totalDailyTasksDone>=50)m.daily=1.2;else if(userData.totalDailyTasksDone>=10)m.daily=1.1;
-    if(userData.totalWeeklyTasksDone>=50)m.weekly=1.5;else if(userData.totalWeeklyTasksDone>=10)m.weekly=1.2;else if(userData.totalWeeklyTasksDone>=5)m.weekly=1.1;
-    m.total=m.checkin*m.daily*m.weekly; return m;
+function getAchBonus(buffType) {
+    let total = 0;
+    ACHIEVEMENTS.forEach(a => {
+        if(a.buff === buffType && userData.achievements && userData.achievements[a.id]) total += a.bonus;
+    });
+    return total;
 }
-function getAchievementBuff(buffType) {
-    var mult=1.0;
-    ACHIEVEMENTS.filter(function(a){return a.buff===buffType&&userData.achievements&&userData.achievements[a.id];})
-        .forEach(function(a){mult*=a.mult;});
-    return mult;
+
+function getPBBonus(type) {
+    let total = 0;
+    if(!userData.pbEquipped) return total;
+    userData.pbEquipped.forEach(id => {
+        let pb = PHAP_BAO_DATA.find(p => p.id === id);
+        if(pb && pb.type === type) total += pb.bonus;
+    });
+    return total;
 }
+
+// Tu Vi Calculation (All additive on top of base 1.0)
+function getTuViMult() {
+    let checkin = getAchBonus('checkin');
+    let daily = getAchBonus('daily');
+    let weekly = getAchBonus('weekly');
+    let pb = getPBBonus('tuvi');
+    return {
+        checkin: checkin, daily: daily, weekly: weekly, pb: pb,
+        total: 1.0 + checkin + daily + weekly + pb
+    };
+}
+
+// Farm Calculation
 function getSellPrice(cropIdx) {
-    var base=CROPS[cropIdx].sellPrice;
-    var upgLevel=userData.farm.upgrades2?(userData.farm.upgrades2.sellBonus||0):0;
-    var upgMult=1+upgLevel*0.15;
-    var achMult=getAchievementBuff('sellBonus');
-    return Math.max(1,Math.floor(base*upgMult*achMult));
+    var base = CROPS[cropIdx].sellPrice;
+    var upgLevel = userData.farm.upgrades2 ? (userData.farm.upgrades2.sellBonus || 0) : 0;
+    var upgBonus = upgLevel * 0.15;
+    var achBonus = getAchBonus('farmSell');
+    var pbBonus = getPBBonus('farm');
+    return Math.max(1, Math.floor(base * (1.0 + upgBonus + achBonus + pbBonus)));
 }
+
+function getCropSpeedMult() {
+    var s1 = userData.farm.upgrades2 ? (userData.farm.upgrades2.cropSpeed || 0) : 0;
+    var s2 = userData.farm.upgrades2 ? (userData.farm.upgrades2.waterSys || 0) : 0;
+    var pbRed = userData.pbEquipped.includes('nuong') ? 0.20 : 0; // Cửu thiên tức nhưỡng
+    var red = s1*0.05 + s2*0.05 + pbRed;
+    return Math.max(0.1, 1.0 - red); // Cap 90% reduction
+}
+
+// Alchemy Calculation
 function getPillExp(pillIdx) {
-    var base=PILLS[pillIdx].exp;
-    var furnaceBonus=getFurnaceExpBonus();
-    var achMult=getAchievementBuff('alchemyExp');
-    return Math.floor(base*furnaceBonus*achMult);
+    var base = PILLS[pillIdx].exp;
+    var fBonus = (!userData.farm.furnaces || userData.farm.furnaces.active < 0) ? 0 : (FURNACES[userData.farm.furnaces.active].expBonus - 1);
+    var achBonus = getAchBonus('alchemy');
+    var pbBonus = getPBBonus('dan');
+    return Math.floor(base * (1.0 + fBonus + achBonus + pbBonus));
 }
-function getFurnaceTimeReduction() {
-    if(!userData.farm.furnaces||userData.farm.furnaces.active<0)return 1.0;
-    return 1.0-FURNACES[userData.farm.furnaces.active].timeRed;
+
+function getFactorySpeedMult() {
+    var fRed = (!userData.farm.furnaces || userData.farm.furnaces.active < 0) ? 0 : FURNACES[userData.farm.furnaces.active].timeRed;
+    var pbRed = getPBBonus('dan'); // Hỏa Vũ: 0.3, Bát Quái: 0.6
+    var totalRed = fRed + pbRed;
+    return Math.max(0.1, 1.0 - totalRed); // Cap 90% reduction
 }
-function getFurnaceExpBonus() {
-    if(!userData.farm.furnaces||userData.farm.furnaces.active<0)return 1.0;
-    return FURNACES[userData.farm.furnaces.active].expBonus;
-}
-function buffClass(val){if(val>=1.3)return'buff-13p';if(val>=1.2)return'buff-12';if(val>=1.1)return'buff-11';return'buff-10';}
+
+function buffClass(val) { if(val>=0.3) return'buff-13p'; if(val>=0.2) return'buff-12'; if(val>=0.1) return'buff-11'; return'buff-10'; }
 
 // ════════════════════════════════════════════
 // ADD EXP / CHECKIN
 // ════════════════════════════════════════════
 function addExp(amount) {
     if(userData.realmIndex>=realms.length-1)return;
-    userData.exp+=Math.floor(amount*getMultipliers().total);
-    var cr=realms[userData.realmIndex];
-    while(userData.exp>=cr.maxExp && userData.realmIndex<realms.length-1) {
-        userData.exp-=cr.maxExp; userData.realmIndex++;
-        cr=realms[userData.realmIndex];
-        showToast("✦ Đột phá! → "+realms[userData.realmIndex].name,'success');
+    userData.exp += Math.floor(amount * getTuViMult().total);
+    var cr = realms[userData.realmIndex];
+    while(userData.exp >= cr.maxExp && userData.realmIndex < realms.length - 1) {
+        userData.exp -= cr.maxExp; userData.realmIndex++;
+        cr = realms[userData.realmIndex];
+        showToast("✦ Đột phá! → " + realms[userData.realmIndex].name, 'success');
     }
 }
 function dailyCheckIn() {
-    var tm=getMidnight(new Date()); userData.lastCheckinMidnight=tm;
-    userData.points+=1; userData.checkinStreak+=1; userData.weeklyTasks.checkins+=1;
-    addExp(500); checkWeeklyRewards(); saveData();
-    showToast("✦ Ký danh thành công! +1 Danh Vọng · Tu Vi nhận.",'success');
+    var tm = getMidnight(new Date()); userData.lastCheckinMidnight = tm;
+    userData.points += 1; userData.checkinStreak += 1; userData.weeklyTasks.checkins += 1;
+    addExp(500); checkWeeklyRewards(); checkAchievements(); saveData();
+    showToast("✦ Ký danh thành công! +1 Danh Vọng · Tu Vi nhận.", 'success');
 }
 function doDynamicTask(idx) {
     var t=userData.currentDailyTasks[idx]; if(t.completed)return;
     t.current+=1;
-    if(t.current>=t.max){t.completed=true;userData.totalDailyTasksDone+=1;userData.weeklyTasks.dailyDone+=1;
-        addExp(t.exp);checkWeeklyRewards();showToast("✓ Hoàn thành: "+t.desc+"! Tu Vi nhận.",'success');}
+    if(t.current>=t.max){
+        t.completed=true; userData.totalDailyTasksDone+=1; userData.weeklyTasks.dailyDone+=1;
+        addExp(t.exp); checkWeeklyRewards(); checkAchievements();
+        showToast("✓ Hoàn thành: "+t.desc+"! Tu Vi nhận.",'success');
+    }
     saveData();
 }
 function checkWeeklyRewards() {
@@ -1149,11 +1208,11 @@ function checkWeeklyRewards() {
 // CHECK ACHIEVEMENTS
 // ════════════════════════════════════════════
 function checkAchievements() {
-    if(!userData.achievements)userData.achievements={};
+    if(!userData.achievements) userData.achievements={};
     ACHIEVEMENTS.forEach(function(a){
-        if(!userData.achievements[a.id]&&a.check(userData)){
-            userData.achievements[a.id]=true;
-            showMcAchievement(a.icon,a.name,a.desc);
+        if(!userData.achievements[a.id] && a.check(userData)){
+            userData.achievements[a.id] = true;
+            showMcAchievement(a.icon, a.name, "Mở khóa Thành Tựu Mới!");
             showToast("🏆 Thành tựu: "+a.name,'success');
         }
     });
@@ -1169,11 +1228,13 @@ function updateUI() {
     if(userData.checkinStreak>0)st.classList.add('streak-active');else st.classList.remove('streak-active');
     document.getElementById("stat-total-daily").innerText=userData.totalDailyTasksDone;
     document.getElementById("stat-total-weekly").innerText=userData.totalWeeklyTasksDone;
+    
     var ih="";
     if(userData.checkinStreak>=356)ih='<img src="'+ICON_PURPLE_FIRE+'" class="achievement-icon" alt="">';
     else if(userData.checkinStreak>=100)ih='<img src="'+ICON_BLUE_FIRE+'" class="achievement-icon" alt="">';
     else if(userData.checkinStreak>=30)ih='<img src="'+ICON_FIRE+'" class="achievement-icon" alt="">';
     document.getElementById("streak-icon").innerHTML=ih;
+    
     var tc=document.getElementById("daily-tasks-container");tc.innerHTML="";
     userData.currentDailyTasks.forEach(function(t,i){
         var txt=t.completed?"Đã xong":(t.max>1?"+1 ("+t.current+"/"+t.max+")":"Hoàn thành");
@@ -1188,16 +1249,29 @@ function updateUI() {
     document.getElementById("points").innerText=userData.points;
     if(userData.realmIndex>=realms.length-1){document.getElementById("exp").innerText="MAX";document.getElementById("max-exp").innerText="MAX";document.getElementById("exp-bar").style.width="100%";}
     else{document.getElementById("exp").innerText=userData.exp;document.getElementById("max-exp").innerText=r.maxExp;document.getElementById("exp-bar").style.width=((userData.exp/r.maxExp)*100)+"%";}
-    var m=getMultipliers();
-    document.getElementById("buff-checkin").className="buff-text "+buffClass(m.checkin);document.getElementById("buff-checkin").innerText=m.checkin.toFixed(1)+"x";
-    document.getElementById("buff-daily").className="buff-text "+buffClass(m.daily);document.getElementById("buff-daily").innerText=m.daily.toFixed(1)+"x";
-    document.getElementById("buff-weekly").className="buff-text "+buffClass(m.weekly);document.getElementById("buff-weekly").innerText=m.weekly.toFixed(1)+"x";
-    document.getElementById("buff-total").innerText=m.total.toFixed(2)+"x";
-    document.getElementById("buff-checkin-display").innerText=m.checkin.toFixed(1)+"x";
-    var achSellBuff=getAchievementBuff('sellBonus');
-    var achAlcBuff=getAchievementBuff('alchemyExp');
-    document.getElementById("buff-alchemy-ach").className="buff-text "+buffClass(achAlcBuff);document.getElementById("buff-alchemy-ach").innerText="×"+achAlcBuff.toFixed(2);
-    document.getElementById("buff-sell-ach").className="buff-text "+buffClass(achSellBuff);document.getElementById("buff-sell-ach").innerText="×"+achSellBuff.toFixed(2);
+    
+    // Updates additive UI
+    let tuvi = getTuViMult();
+    
+    let setBuffUI = (id, val) => {
+        let el = document.getElementById(id);
+        if(!el) return;
+        el.className = "buff-text " + buffClass(val);
+        el.innerText = "+" + (val * 100).toFixed(0) + "%";
+    }
+
+    setBuffUI("buff-checkin", tuvi.checkin);
+    setBuffUI("buff-daily", tuvi.daily);
+    setBuffUI("buff-weekly", tuvi.weekly);
+    setBuffUI("buff-alchemy-ach", getAchBonus('alchemy'));
+    setBuffUI("buff-sell-ach", getAchBonus('farmSell'));
+    
+    let pbEl = document.getElementById("buff-phaobao");
+    if(pbEl) { pbEl.innerText = "+" + (tuvi.pb * 100).toFixed(0) + "%"; }
+    
+    document.getElementById("buff-total").innerText = tuvi.total.toFixed(2) + "x";
+    document.getElementById("buff-checkin-display").innerText = "+" + (tuvi.checkin * 100).toFixed(0) + "%";
+    
     document.getElementById("global-lt").innerText=userData.linhThach||0;
     document.getElementById("global-dv").innerText=userData.points||0;
     document.getElementById("global-exp").innerText=userData.exp||0;
@@ -1231,12 +1305,16 @@ function fetchUpdateLog() {
 // FARM INIT
 // ════════════════════════════════════════════
 function initFarmData() {
+    if(!userData.pbInv) userData.pbInv = []; 
+    if(!userData.pbEquipped) userData.pbEquipped = [];
+    if(typeof userData.afkLastSeen === 'undefined') userData.afkLastSeen = null;
+
     if(!userData.farm){
         userData.farm={lastSave:Date.now(),linhthao:0,
             plots:[{cropType:null},{cropType:null},{cropType:null}],
             factory:{queue:[],selectedPill:0,completedPills:{0:0,1:0,2:0,3:0,4:0}},
             upgrades:{speedUp:false,furnaceUp:false},
-            upgrades2:{plotSlot:0,queueSlot:0,craftAll:false,cropSpeed:0,sellBonus:0},
+            upgrades2:{plotSlot:0,queueSlot:0,craftAll:false,cropSpeed:0,sellBonus:0,waterSys:0},
             furnaces:{owned:[],active:-1},
             inventory:{0:0,1:0,2:0,3:0,4:0,5:0}
         };
@@ -1245,14 +1323,13 @@ function initFarmData() {
         if(!userData.farm.factory)userData.farm.factory={queue:[],selectedPill:0,completedPills:{0:0,1:0,2:0,3:0,4:0}};
         if(!userData.farm.upgrades)userData.farm.upgrades={speedUp:false,furnaceUp:false};
         if(typeof userData.farm.linhthao==='undefined')userData.farm.linhthao=0;
-        if(!userData.farm.upgrades2)userData.farm.upgrades2={plotSlot:0,queueSlot:0,craftAll:false,cropSpeed:0,sellBonus:0};
+        if(!userData.farm.upgrades2)userData.farm.upgrades2={plotSlot:0,queueSlot:0,craftAll:false,cropSpeed:0,sellBonus:0,waterSys:0};
         if(!userData.farm.furnaces)userData.farm.furnaces={owned:[],active:-1};
         if(!userData.farm.inventory)userData.farm.inventory={0:0,1:0,2:0,3:0,4:0,5:0};
     }
     var maxPlots=getMaxPlots();
     while(userData.farm.plots.length<maxPlots) userData.farm.plots.push({cropType:null,plantedAt:null,done:false});
     
-    // Đồng bộ mảng plotSelecting cho bằng số ô đất hiện tại
     plotSelecting=new Array(userData.farm.plots.length).fill(false);
     
     if(!userData.linhThach)userData.linhThach=0;
@@ -1267,7 +1344,6 @@ function initFarmData() {
 // ════════════════════════════════════════════
 function getMaxPlots(){return 3+(userData.farm.upgrades2?(userData.farm.upgrades2.plotSlot||0):0);}
 function getMaxQueue(){return 5+(userData.farm.upgrades2?(userData.farm.upgrades2.queueSlot||0):0);}
-function getCropSpeedMult(){var lvl=userData.farm.upgrades2?(userData.farm.upgrades2.cropSpeed||0):0;return Math.max(0.1,1-lvl*0.1);}
 function getCropDuration(ci){
     var b=CROPS[ci].duration;
     var oldRed=userData.farm.upgrades.speedUp?0.8:1.0;
@@ -1278,8 +1354,8 @@ function getFactoryDuration(pillIdx){
     var idx=(pillIdx!==undefined&&pillIdx!==null)?pillIdx:0;
     var base=PILLS[idx].craftDuration;
     var oldRed=userData.farm.upgrades.furnaceUp?0.7:1.0;
-    var furnaceRed=getFurnaceTimeReduction();
-    return Math.max(60,Math.floor(base*oldRed*furnaceRed));
+    var newRed=getFactorySpeedMult();
+    return Math.max(60,Math.floor(base*oldRed*newRed));
 }
 
 // ════════════════════════════════════════════
@@ -1296,7 +1372,6 @@ function fmtHuman(s){
     s=Math.floor(s);if(s>=86400){var d=Math.floor(s/86400),h=Math.floor((s%86400)/3600);return"~"+d+"d "+h+"h";}
     var h=Math.floor(s/3600),m=Math.floor((s%3600)/60);if(h>0)return"~"+h+"h "+m+"m";return"~"+m+"m";
 }
-function fmtDuration(s){if(s>=86400)return Math.floor(s/86400)+" ngày";if(s>=3600)return Math.floor(s/3600)+"h";return Math.floor(s/60)+"ph";}
 
 // ════════════════════════════════════════════
 // OFFLINE CATCHUP
@@ -1309,29 +1384,39 @@ function offlineFarmCatchup() {
             if(now-plot.plantedAt>=getCropDuration(plot.cropType)*1000){plot.done=true;changed=true;}
         }
     });
-    var keepGoing=true;
-    while(keepGoing&&userData.farm.factory.queue.length>0){
-        var craft=userData.farm.factory.queue[0];
-        var pillIdx=(craft.pillType!==undefined)?craft.pillType:0;
-        var factDurMs=getFactoryDuration(pillIdx)*1000;
-        if(craft.startedAt&&now>=craft.startedAt+factDurMs){
-            userData.farm.factory.completedPills[pillIdx]=(userData.farm.factory.completedPills[pillIdx]||0)+1;
-            var nextStart=craft.startedAt+factDurMs;
-            userData.farm.factory.queue.shift();
-            if(userData.farm.factory.queue.length>0&&!userData.farm.factory.queue[0].startedAt)userData.farm.factory.queue[0].startedAt=nextStart;
-            changed=true;
-        }else{keepGoing=false;}
-    }
+    
+    // Nâng cấp Luyện Đan Song Song (Craft All = Parallel)
+    var q = userData.farm.factory.queue;
+    var isParallel = userData.farm.upgrades2 && userData.farm.upgrades2.craftAll;
 
-    // ==== THÊM ĐOẠN CHECK OFFLINE AFK NÀY VÀO ĐÂY ====
-    if (userData.meditation && userData.meditation.active && userData.meditation.startedAt) {
-        var durMs = userData.meditation.durationMins * 60 * 1000;
-        if (now >= userData.meditation.startedAt + durMs) {
-            completeMeditation(); 
-            changed = false; // completeMeditation đã tự gọi saveData() rồi
+    if (isParallel) {
+        // Xử lý chạy song song khi offline
+        for(let i = q.length - 1; i >= 0; i--) {
+            if(!q[i].startedAt) q[i].startedAt = userData.farm.lastSave; 
+            var pillIdx = (q[i].pillType !== undefined) ? q[i].pillType : 0;
+            var factDurMs = getFactoryDuration(pillIdx) * 1000;
+            if(now >= q[i].startedAt + factDurMs) {
+                userData.farm.factory.completedPills[pillIdx] = (userData.farm.factory.completedPills[pillIdx] || 0) + 1;
+                q.splice(i, 1);
+                changed = true;
+            }
+        }
+    } else {
+        // Xử lý chạy nối tiếp (như cũ)
+        var keepGoing=true;
+        while(keepGoing&&q.length>0){
+            var craft=q[0];
+            var pillIdx=(craft.pillType!==undefined)?craft.pillType:0;
+            var factDurMs=getFactoryDuration(pillIdx)*1000;
+            if(craft.startedAt&&now>=craft.startedAt+factDurMs){
+                userData.farm.factory.completedPills[pillIdx]=(userData.farm.factory.completedPills[pillIdx]||0)+1;
+                var nextStart=craft.startedAt+factDurMs;
+                q.shift();
+                if(q.length>0&&!q[0].startedAt)q[0].startedAt=nextStart;
+                changed=true;
+            }else{keepGoing=false;}
         }
     }
-    // ===================================================
 
     userData.farm.lastSave=now;
     if(changed)localStorage.setItem(SAVE_KEY,JSON.stringify(userData));
@@ -1351,13 +1436,17 @@ function plantCrop(pIdx,cIdx) {
 function harvestPlot(pIdx) {
     var plot=userData.farm.plots[pIdx];if(!plot.done)return;
     var cIdx=plot.cropType;
-    userData.farm.inventory[cIdx]=(userData.farm.inventory[cIdx]||0)+1;
-    userData.totalCropsHarvested=(userData.totalCropsHarvested||0)+1;
+    var baseYield = CROPS[cIdx].yield;
+    var pbBonus = getPBBonus('farm');
+    var finalYield = Math.floor(baseYield * (1.0 + pbBonus)); // PB Nông trại áp dụng cho Dùng luôn
+    
+    userData.farm.inventory[cIdx] = (userData.farm.inventory[cIdx]||0) + finalYield;
+    userData.totalCropsHarvested = (userData.totalCropsHarvested||0) + 1;
     plot.cropType=null;plot.plantedAt=null;plot.done=false;
     userData.farm.lastSave=Date.now();
     checkAchievements();
     saveData();renderFarmPlots();updateFarmResourceDisplay();
-    showFarmStatus("🌾 Thu hoạch "+CROPS[cIdx].name+"! Xem Kho để bán/dùng.");
+    showFarmStatus("🌾 Thu hoạch "+finalYield+" "+CROPS[cIdx].name+"!");
 }
 function togglePlotSelect(idx){plotSelecting[idx]=!plotSelecting[idx];renderFarmPlots();}
 
@@ -1381,12 +1470,11 @@ function useCrop(cropIdx, amount) {
     if(!amount||amount<1)return;
     var inv=userData.farm.inventory[cropIdx]||0;
     if(inv<amount){showFarmStatus("❌ Không đủ trong kho!");return;}
-    var yld=CROPS[cropIdx].yield*amount;
     userData.farm.inventory[cropIdx]=inv-amount;
-    userData.farm.linhthao=(userData.farm.linhthao||0)+yld;
+    userData.farm.linhthao=(userData.farm.linhthao||0)+amount;
     userData.farm.lastSave=Date.now();
     saveData();renderInventory();updateFarmResourceDisplay();
-    showFarmStatus("🌿 Chuyển "+amount+" "+CROPS[cropIdx].name+" → +"+yld+" 🌿!");
+    showFarmStatus("🌿 Đã đổi "+amount+" "+CROPS[cropIdx].name+" thành Linh Thảo!");
 }
 function renderInventory() {
     var el=document.getElementById('inventory-container');if(!el)return;
@@ -1400,10 +1488,10 @@ function renderInventory() {
             html+='<div class="inv-row">'+
                 '<img src="'+CROPS[i].img+'" class="inv-img" alt="'+CROPS[i].emoji+'" onerror="this.outerHTML=\'<span style=\\\'font-size:32px;flex-shrink:0;\\\'>'+CROPS[i].emoji+'</span>\'">'+
                 '<div class="inv-info"><div class="inv-name">'+CROPS[i].name+'</div>'+
-                '<div class="inv-count">×'+count+' · Giá bán: '+sp+'💎/cái · Yield: '+CROPS[i].yield+'🌿/cái</div></div>'+
+                '<div class="inv-count">×'+count+' · Giá bán: '+sp+'💎/cái</div></div>'+
                 '<div class="inv-btns">'+
                 '<button class="inv-btn sell-btn" onclick="sellCrop('+i+','+count+')">Bán Tất<br><small>+'+sp*count+'💎</small></button>'+
-                '<button class="inv-btn use-btn" onclick="useCrop('+i+','+count+')">Dùng Tất<br><small>+'+CROPS[i].yield*count+'🌿</small></button>'+
+                '<button class="inv-btn use-btn" onclick="useCrop('+i+','+count+')">Làm Thuốc<br><small>+'+count+'🌿</small></button>'+
                 '</div></div>';
         }
     }
@@ -1420,18 +1508,28 @@ function selectPill(idx){
     localStorage.setItem(SAVE_KEY,JSON.stringify(userData));
     renderPillSelector();updateFarmResourceDisplay();
 }
+
 function startCraft(){
     var selectedPill=userData.farm.factory.selectedPill||0;
     var pill=PILLS[selectedPill];
     var maxQ=getMaxQueue();
+    var isParallel = userData.farm.upgrades2 && userData.farm.upgrades2.craftAll; // Kiểm tra nâng cấp
+    
     if(userData.farm.factory.queue.length>=maxQ){showFarmStatus("❌ Hàng chờ đã đầy!");return;}
     if((userData.farm.linhthao||0)<pill.cost){showFarmStatus("❌ Thiếu "+pill.cost+" 🌿!");return;}
     userData.farm.linhthao-=pill.cost;
-    userData.farm.factory.queue.push({pillType:selectedPill,startedAt:userData.farm.factory.queue.length===0?Date.now():null});
+    
+    // Nếu có nâng cấp song song hoặc lò đang trống thì bắt đầu đếm giờ ngay
+    userData.farm.factory.queue.push({
+        pillType: selectedPill, 
+        startedAt: (userData.farm.factory.queue.length===0 || isParallel) ? Date.now() : null
+    });
+    
     userData.farm.lastSave=Date.now();
     saveData();updateFarmResourceDisplay();renderFactoryQueue();renderPillSelector();
     showFarmStatus("⚗️ Bắt đầu luyện đan!");
 }
+
 function startCraftAll(){
     var selectedPill=userData.farm.factory.selectedPill||0;
     var pill=PILLS[selectedPill];
@@ -1439,7 +1537,8 @@ function startCraftAll(){
     var added=0;
     while(userData.farm.factory.queue.length<maxQ&&(userData.farm.linhthao||0)>=pill.cost){
         userData.farm.linhthao-=pill.cost;
-        userData.farm.factory.queue.push({pillType:selectedPill,startedAt:userData.farm.factory.queue.length===1?Date.now():null});
+        // Bấm nút này chắc chắn là đã mua nâng cấp -> chạy song song luôn
+        userData.farm.factory.queue.push({pillType:selectedPill, startedAt: Date.now()});
         added++;
     }
     if(added===0){showFarmStatus("❌ Hàng đầy hoặc thiếu 🌿!");return;}
@@ -1447,6 +1546,7 @@ function startCraftAll(){
     saveData();updateFarmResourceDisplay();renderFactoryQueue();renderPillSelector();
     showFarmStatus("🔄 Đã nạp "+added+" Đan!");
 }
+
 function claimPills(){
     var cp=userData.farm.factory.completedPills;var total=0;
     PILLS.forEach(function(pill,idx){
@@ -1484,7 +1584,7 @@ function buyNewUpgrade(id){
     if(boolUpg){userData.farm.upgrades2[id]=true;}else{userData.farm.upgrades2[id]=currentLevel+1;}
     if(id==='plotSlot'){
         userData.farm.plots.push({cropType:null,plantedAt:null,done:false});
-        plotSelecting.push(false); // Fix: Mở rộng mảng plotSelecting cho ô đất mới
+        plotSelecting.push(false); 
     }
     userData.farm.lastSave=Date.now();
     saveData();renderNewUpgrades();renderFarmAll();updateGlobalLT();
@@ -1542,6 +1642,86 @@ function renderActiveFurnace(){
 }
 
 // ════════════════════════════════════════════
+// PHÁP BẢO ACTIONS (SHOP & INVENTORY)
+// ════════════════════════════════════════════
+function buyPhapBao(id) {
+    let item = PHAP_BAO_DATA.find(p => p.id === id);
+    if(userData.pbInv.includes(id)) { showToast("Đã sở hữu pháp bảo này!", "error"); return; }
+    if((userData.linhThach || 0) < item.price) { showToast("Thiếu Linh Thạch!", "error"); return; }
+    
+    userData.linhThach -= item.price;
+    userData.pbInv.push(id);
+    saveData(); renderShopPB(); updateGlobalLT(); updateUI(); renderMeditation();
+    showToast("Đã mua " + item.name + "!", "success");
+}
+
+function toggleEquipPB(id) {
+    let idx = userData.pbEquipped.indexOf(id);
+    if(idx > -1) {
+        userData.pbEquipped.splice(idx, 1);
+        showToast("Đã tháo trang bị", "info");
+    } else {
+        if(userData.pbEquipped.length >= 5) { showToast("Tối đa 5 pháp bảo!", "error"); return; }
+        userData.pbEquipped.push(id);
+        showToast("Đã trang bị thành công", "success");
+    }
+    saveData(); renderInventoryPB(); updateUI(); renderMeditation();
+}
+
+function renderShopPB() {
+    let el = document.getElementById('shop-pb-list'); if(!el) return;
+    document.getElementById('shop-pb-lt').innerText = userData.linhThach || 0;
+    el.innerHTML = PHAP_BAO_DATA.map(pb => {
+        let owned = userData.pbInv.includes(pb.id);
+        return `<div class="upgrade-row ${owned ? 'owned-card' : ''}">
+            <div class="upgrade-info" style="display:flex;gap:10px;align-items:center;">
+                <div style="font-size:32px;">${pb.emoji}</div>
+                <div>
+                    <div class="upgrade-name">${pb.name}</div>
+                    <div class="upgrade-desc" style="color:var(--cyan);font-weight:600;">${pb.desc}</div>
+                </div>
+            </div>
+            <button class="upg-btn lt-upg-btn" ${owned?'disabled':''} onclick="buyPhapBao('${pb.id}')">${owned?'✅ Đã Sở Hữu':pb.price+' 💎'}</button>
+        </div>`;
+    }).join('');
+}
+
+function renderInventoryPB() {
+    let invEl = document.getElementById('inventory-pb-list'); if(!invEl) return;
+    let eqEl = document.getElementById('equipped-pb-list'); if(!eqEl) return;
+    
+    document.getElementById('pb-equip-count').innerText = userData.pbEquipped.length + "/5";
+    
+    invEl.innerHTML = userData.pbInv.map(id => {
+        let pb = PHAP_BAO_DATA.find(p => p.id === id);
+        let isEq = userData.pbEquipped.includes(id);
+        if(isEq) return '';
+        return `<div class="inv-row">
+            <span style="font-size:28px;flex-shrink:0;text-align:center;width:40px;">${pb.emoji}</span>
+            <div class="inv-info"><div class="inv-name">${pb.name}</div><div class="inv-count">${pb.desc}</div></div>
+            <button class="inv-btn use-btn" onclick="toggleEquipPB('${pb.id}')">Trang bị</button>
+        </div>`;
+    }).join('');
+
+    if(invEl.innerHTML === '' && userData.pbInv.length === userData.pbEquipped.length) {
+        invEl.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:12px;padding:15px;">Không còn món nào trong kho.</div>';
+    }
+
+    eqEl.innerHTML = userData.pbEquipped.map(id => {
+        let pb = PHAP_BAO_DATA.find(p => p.id === id);
+        return `<div class="inv-row" style="background:rgba(0,210,255,0.05); border-color:var(--cyan);">
+            <span style="font-size:28px;flex-shrink:0;text-align:center;width:40px;">${pb.emoji}</span>
+            <div class="inv-info"><div class="inv-name" style="color:var(--cyan);">${pb.name} (Đang dùng)</div><div class="inv-count" style="color:var(--cyan);">${pb.desc}</div></div>
+            <button class="inv-btn sell-btn" onclick="toggleEquipPB('${pb.id}')">Tháo ra</button>
+        </div>`;
+    }).join('');
+    
+    if(eqEl.innerHTML === '') {
+        eqEl.innerHTML = '<div style="text-align:center;color:var(--text-muted);font-size:12px;padding:15px;">Chưa trang bị pháp bảo nào.</div>';
+    }
+}
+
+// ════════════════════════════════════════════
 // FARM SHOW STATUS
 // ════════════════════════════════════════════
 function showFarmStatus(msg){
@@ -1578,6 +1758,7 @@ function updateGlobalLT(){
     var flt=document.getElementById('farm-linhthach');if(flt)flt.textContent=userData.linhThach||0;
     var mlt=document.getElementById('med-lt-display');if(mlt)mlt.textContent=(userData.linhThach||0)+' 💎';
     var slt=document.getElementById('shop-lt-display');if(slt)slt.textContent=userData.linhThach||0;
+    var pbLt=document.getElementById('shop-pb-lt');if(pbLt)pbLt.textContent=userData.linhThach||0;
 }
 
 // ════════════════════════════════════════════
@@ -1665,10 +1846,13 @@ function renderPillSelector(){
 function renderFactoryQueue(){
     var el=document.getElementById('factory-queue-display');if(!el)return;el.innerHTML='';
     var maxQ=getMaxQueue();
+    var isParallel = userData.farm.upgrades2 && userData.farm.upgrades2.craftAll; // Kiểm tra Luyện Song Song
     for(var i=0;i<maxQ;i++){
         var slot=document.createElement('div');
         var craft=userData.farm.factory.queue[i];
-        slot.className=craft?(i===0?'q-slot active-q':'q-slot'):'q-slot';
+        // Nếu đã mở nâng cấp parallel, tất cả ô có đan đều sáng. Nếu chưa, chỉ sáng ô đầu.
+        var isActive = craft && craft.startedAt && (isParallel || i === 0);
+        slot.className = isActive ? 'q-slot active-q' : 'q-slot';
         if(craft){var pillIdx=(craft.pillType!==undefined)?craft.pillType:0;
             var img=document.createElement('img');img.src=PILLS[pillIdx].img;img.style='width:18px;height:18px;object-fit:contain;';
             img.onerror=function(){this.outerHTML='<span>'+PILLS[pillIdx].emoji+'</span>';};slot.appendChild(img);}
@@ -1726,158 +1910,121 @@ function updateFarmResourceDisplay(){
 }
 
 // ════════════════════════════════════════════
-// ACHIEVEMENTS RENDER
+// ACHIEVEMENTS RENDER (V0.5.1 ADDITIVE)
 // ════════════════════════════════════════════
 function renderAchievements(){
-    var farmAchs=ACHIEVEMENTS.filter(function(a){return a.buff==='sellBonus';});
-    var alcAchs=ACHIEVEMENTS.filter(function(a){return a.buff==='alchemyExp';});
-    var medAchs=ACHIEVEMENTS.filter(function(a){return a.buff==='meditationBonus';});
+    var ciAchs=ACHIEVEMENTS.filter(function(a){return a.buff==='checkin';});
+    var dltAchs=ACHIEVEMENTS.filter(function(a){return a.buff==='daily';});
+    var wkAchs=ACHIEVEMENTS.filter(function(a){return a.buff==='weekly';});
+    var farmAchs=ACHIEVEMENTS.filter(function(a){return a.buff==='farmSell';});
+    var alcAchs=ACHIEVEMENTS.filter(function(a){return a.buff==='alchemy';});
+    var medAchs=ACHIEVEMENTS.filter(function(a){return a.buff==='meditation';});
+    
     function renderGrid(achs, elId){
         var el=document.getElementById(elId);if(!el)return;
         el.innerHTML=achs.map(function(a){
             var unlocked=userData.achievements&&userData.achievements[a.id];
-            return '<div class="ach-card'+(unlocked?' unlocked':(a.check(userData)?'':' ach-locked'))+'"'+(!unlocked&&a.check(userData)?'':'')+'>'+
+            var statusHtml = unlocked ? 
+                '<div style="font-size:10px;color:var(--success);margin-top:4px;">✅ Hoàn thành</div>' : 
+                '<div style="font-size:10px;color:var(--text-muted);margin-top:4px;">Chưa đạt</div>';
+            
+            return '<div class="ach-card'+(unlocked?' unlocked':' ach-locked')+'">' +
                 '<span class="ach-icon">'+a.icon+'</span>'+
                 '<div class="ach-name">'+a.name+'</div>'+
                 '<div class="ach-desc">'+a.desc+'</div>'+
-                '<div class="ach-buff">Buff: ×'+a.mult+' '+a.buff+'</div>'+
-                (unlocked?'<div style="font-size:10px;color:var(--success);margin-top:4px;">✓ Đã mở khoá</div>':'')+'</div>';
+                '<div class="ach-buff">Buff: +'+(a.bonus*100).toFixed(0)+'%</div>'+
+                statusHtml + '</div>';
         }).join('');
     }
+    
+    renderGrid(ciAchs,'ach-ci-grid');
+    renderGrid(dltAchs,'ach-daily-grid');
+    renderGrid(wkAchs,'ach-weekly-grid');
     renderGrid(farmAchs,'ach-farm-grid');
     renderGrid(alcAchs,'ach-alchemy-grid');
     renderGrid(medAchs,'ach-med-grid');
+    
     var total=ACHIEVEMENTS.filter(function(a){return userData.achievements&&userData.achievements[a.id];}).length;
     var el=document.getElementById('ach-count');if(el)el.textContent=total+'/'+ACHIEVEMENTS.length;
 }
 
 // ════════════════════════════════════════════
-// AFK SYSTEM (OFFLINE PROGRESS)
+// AFK SYSTEM (AUTO V0.5.1 ADDITIVE)
 // ════════════════════════════════════════════
-function selectMedTime(mins, btnEl) {
-    if(userData.meditation && userData.meditation.active) return;
-    selectedMedTime=mins;
-    document.querySelectorAll('.med-time-btn').forEach(function(b){b.classList.remove('active');});
-    if(btnEl)btnEl.classList.add('active');
-    
-    var rewards={5:5,10:12,15:20};
-    var streakMult=(userData.meditation&&userData.meditation.streak>=3)?1.5:1.0;
-    var achMult=getAchievementBuff('meditationBonus');
-    var total=Math.floor((rewards[mins]||5)*streakMult*achMult);
-    var infoEl=document.getElementById('med-bonus-info');
-    if(infoEl)infoEl.textContent='Nhận ~'+total+' 💎 sau khi hoàn thành'+(streakMult>1?' (×'+streakMult+' streak)':'');
-    
-    var el=document.getElementById('med-timer');
-    if(el) el.textContent=fmt(mins*60);
+function getAfkRate() {
+    var baseRate = 1.0;
+    var pbBonus = getPBBonus('afk');
+    var achBonus = getAchBonus('meditation');
+    return {
+        total: baseRate * (1.0 + pbBonus + achBonus),
+        pbMult: pbBonus,
+        achMult: achBonus
+    };
 }
 
-function toggleMeditation(){
-    var today=(userData.meditation&&userData.meditation.today)||0;
-    var todayStr=new Date().toDateString();
-    if(userData.meditation&&userData.meditation.date!==todayStr){today=0;}
-    if(today>=3){showToast("❌ Đã AFK đủ 3 lần hôm nay!",'error');return;}
-    
-    // Ghi lại thời gian bắt đầu
-    userData.meditation.active = true;
-    userData.meditation.startedAt = Date.now();
-    userData.meditation.durationMins = selectedMedTime;
-    saveData();
-    
-    document.getElementById('med-start-btn').style.display='none';
-    document.getElementById('med-cancel-btn').style.display='block';
-    document.querySelectorAll('.med-time-btn').forEach(function(b){b.disabled=true;});
-    showToast("💤 Bắt đầu treo máy AFK "+selectedMedTime+" phút...",'info');
-    updateMedTimerDisplay();
-}
-
-function cancelMeditation(){
-    if(!userData.meditation || !userData.meditation.active)return;
-    userData.meditation.active = false;
-    userData.meditation.startedAt = null;
-    saveData();
-    
-    document.getElementById('med-start-btn').style.display='block';
-    document.getElementById('med-cancel-btn').style.display='none';
-    document.querySelectorAll('.med-time-btn').forEach(function(b){b.disabled=false;});
-    var el=document.getElementById('med-timer');
-    if(el) el.textContent=fmt(selectedMedTime*60);
-    showToast("Đã hủy AFK.",'error');
-}
-
-function completeMeditation(){
-    userData.meditation.active = false;
-    userData.meditation.startedAt = null;
-    
-    var rewards={5:5,10:12,15:20};
-    var base=rewards[userData.meditation.durationMins]||5;
-    var todayStr=new Date().toDateString();
-    if(!userData.meditation.date) userData.meditation.date = todayStr;
-    if(userData.meditation.date!==todayStr){userData.meditation.today=0;userData.meditation.date=todayStr;}
-    
-    var streakMult=(userData.meditation.streak>=3)?1.5:1.0;
-    var achMult=getAchievementBuff('meditationBonus');
-    var total=Math.floor(base*streakMult*achMult);
-    
-    userData.linhThach=(userData.linhThach||0)+total;
-    userData.meditation.today=(userData.meditation.today||0)+1;
-    if(userData.meditation.today>=3)userData.meditation.lastFullDate=todayStr;
-    
-    var yestStr=new Date(Date.now()-86400000).toDateString();
-    if(userData.meditation.streak===0&&userData.meditation.lastFullDate===yestStr){userData.meditation.streak=1;}
-    else if(userData.meditation.lastFullDate===yestStr&&userData.meditation.date!==yestStr){userData.meditation.streak=(userData.meditation.streak||0)+1;}
-    
-    checkAchievements();
-    saveData();
-    updateGlobalLT();
-    renderMeditation();
-    
-    document.getElementById('med-start-btn').style.display='block';
-    document.getElementById('med-cancel-btn').style.display='none';
-    document.querySelectorAll('.med-time-btn').forEach(function(b){b.disabled=false;});
-    var el=document.getElementById('med-timer');
-    if(el) el.textContent=fmt(selectedMedTime*60);
-    
-    showMcAchievement("💤","Treo AFK Hoàn Thành","+"+total+" 💎 Linh Thạch nhận được");
-    showToast("✦ Treo máy xong! +"+total+" 💎 Linh Thạch",'success');
-}
-
-function updateMedTimerDisplay(){
-    var el=document.getElementById('med-timer');if(!el)return;
-    if (userData.meditation && userData.meditation.active && userData.meditation.startedAt) {
-        var durMs = userData.meditation.durationMins * 60 * 1000;
-        var elp = Date.now() - userData.meditation.startedAt;
-        var rem = Math.ceil((durMs - elp) / 1000);
-        el.textContent = rem > 0 ? fmt(rem) : '00:00';
-    }
-}
-
-function renderMeditation(){
-    var todayStr=new Date().toDateString();
-    var todayCount=(userData.meditation&&userData.meditation.date===todayStr)?(userData.meditation.today||0):0;
-    var streak=(userData.meditation&&userData.meditation.streak)||0;
-    var streakEl=document.getElementById('med-streak');if(streakEl){streakEl.textContent=streak;}
-    var todayEl=document.getElementById('med-today');if(todayEl){todayEl.textContent=todayCount+'';}
-    var dotsEl=document.getElementById('med-streak-dots');
-    if(dotsEl){
-        var html='';
-        for(var i=0;i<7;i++){html+='<div class="med-streak-dot'+(i<streak?' done':'')+'" title="Ngày '+(i+1)+'"></div>';}
-        dotsEl.innerHTML=html;
-    }
-    var ltEl=document.getElementById('med-lt-display');if(ltEl)ltEl.textContent=(userData.linhThach||0)+' 💎';
-    var achMult=getAchievementBuff('meditationBonus');
-    var buffMedEl=document.getElementById('buff-med-ach');if(buffMedEl)buffMedEl.textContent='×'+achMult.toFixed(2);
-    
-    if (userData.meditation && userData.meditation.active) {
-        document.getElementById('med-start-btn').style.display='none';
-        document.getElementById('med-cancel-btn').style.display='block';
-        document.querySelectorAll('.med-time-btn').forEach(function(b){b.disabled=true;});
-        updateMedTimerDisplay();
+function handleAppVisibility() {
+    if (document.hidden) {
+        if(!userData.afkLastSeen) {
+            userData.afkLastSeen = Date.now();
+            saveData();
+            renderMeditation();
+        }
     } else {
-        document.getElementById('med-start-btn').style.display='block';
-        document.getElementById('med-cancel-btn').style.display='none';
-        document.querySelectorAll('.med-time-btn').forEach(function(b){b.disabled=false;});
-        var el=document.getElementById('med-timer');
-        if(el) el.textContent=fmt(selectedMedTime*60);
+        if(userData.afkLastSeen) {
+            var now = Date.now();
+            var offlineMins = Math.floor((now - userData.afkLastSeen) / 60000);
+            if(offlineMins > 480) offlineMins = 480; // Max 8h
+            
+            if(offlineMins >= 1) {
+                var rateInfo = getAfkRate();
+                var earned = Math.floor(offlineMins * rateInfo.total);
+                userData.linhThach = (userData.linhThach || 0) + earned;
+                
+                showMcAchievement("💤", "Thưởng Treo Máy", "+" + earned + " 💎 Linh Thạch (" + offlineMins + " phút)");
+                showToast("💤 AFK " + offlineMins + " phút → +" + earned + " 💎 Linh Thạch", "success");
+                
+                var todayStr=new Date().toDateString();
+                if(!userData.meditation) userData.meditation={today:0,date:'',streak:0,lastFullDate:''};
+                if(userData.meditation.date!==todayStr){userData.meditation.today=0;userData.meditation.date=todayStr;}
+                userData.meditation.today=(userData.meditation.today||0)+1;
+                if(userData.meditation.today>=3) userData.meditation.lastFullDate=todayStr;
+                var yestStr=new Date(Date.now()-86400000).toDateString();
+                if(userData.meditation.streak===0&&userData.meditation.lastFullDate===yestStr){userData.meditation.streak=1;}
+                else if(userData.meditation.lastFullDate===yestStr&&userData.meditation.date!==yestStr){userData.meditation.streak=(userData.meditation.streak||0)+1;}
+                
+                checkAchievements();
+                updateGlobalLT();
+            }
+            userData.afkLastSeen = null;
+            saveData();
+            renderMeditation();
+        }
+    }
+}
+
+document.addEventListener("visibilitychange", handleAppVisibility);
+window.addEventListener("blur", function() {
+    if(!userData.afkLastSeen) { userData.afkLastSeen = Date.now(); saveData(); renderMeditation(); }
+});
+window.addEventListener("focus", handleAppVisibility);
+
+function renderMeditation() {
+    var rateInfo = getAfkRate();
+    var rateEl = document.getElementById('afk-rate'); if(rateEl) rateEl.textContent = rateInfo.total.toFixed(1);
+    var medLt = document.getElementById('med-lt-display'); if(medLt) medLt.textContent = (userData.linhThach || 0) + ' 💎';
+    
+    var achBuffEl = document.getElementById('buff-med-ach'); if(achBuffEl) achBuffEl.textContent = '+' + (rateInfo.achMult*100).toFixed(0) + '%';
+    var pbBuffEl = document.getElementById('buff-med-phaobao'); if(pbBuffEl) pbBuffEl.textContent = '+' + (rateInfo.pbMult*100).toFixed(0) + '%';
+
+    var statusTimerEl = document.getElementById('afk-status-timer');
+    var statusInfoEl = document.getElementById('afk-last-seen-info');
+    if(userData.afkLastSeen) {
+        var d = new Date(userData.afkLastSeen);
+        if(statusTimerEl) statusTimerEl.textContent = "Đang AFK...";
+        if(statusInfoEl) statusInfoEl.textContent = "Đang AFK từ: " + String(d.getHours()).padStart(2,'0') + ":" + String(d.getMinutes()).padStart(2,'0');
+    } else {
+        if(statusTimerEl) statusTimerEl.textContent = "Đang Tương Tác";
+        if(statusInfoEl) statusInfoEl.textContent = "Sẽ tự động thu thập (1 phút) khi ẩn/đóng trang.";
     }
 }
 
@@ -1890,7 +2037,6 @@ function farmTick(){
     if(!userData.farm)return;
     var now=Date.now();
     var farmTabActive=document.getElementById('tab-farm').classList.contains('active');
-    var medTabActive=document.getElementById('tab-meditation').classList.contains('active'); // Thêm dòng này
     
     var needSave = false;
     var needRerender = false;
@@ -1906,34 +2052,41 @@ function farmTick(){
         }
     });
 
-    // Check đan dược xong
-    var q=userData.farm.factory.queue;
-    if(q.length>0&&q[0].startedAt){
-        var pillIdx=(q[0].pillType!==undefined)?q[0].pillType:0;
-        var factDur=getFactoryDuration(pillIdx)*1000;
-        if(now>=q[0].startedAt+factDur){
-            userData.farm.factory.completedPills[pillIdx]=(userData.farm.factory.completedPills[pillIdx]||0)+1;
-            var nextStart=q[0].startedAt+factDur;
-            q.shift();
-            if(q.length>0&&!q[0].startedAt)q[0].startedAt=nextStart;
-            needSave=true;
-            showFarmStatus("💊 Đan Dược hoàn thành!");
-            if(farmTabActive){renderFactoryQueue();updateFarmResourceDisplay();}
+    // Check đan dược xong (Song song hoặc nối tiếp)
+    var q = userData.farm.factory.queue;
+    var isParallel = userData.farm.upgrades2 && userData.farm.upgrades2.craftAll;
+    var initialLength = q.length;
+
+    // Nếu vừa mua nâng cấp, ép tất cả các viên đang chờ kích hoạt đếm giờ
+    if (isParallel) {
+        for(let i = 0; i < q.length; i++) {
+            if (!q[i].startedAt) q[i].startedAt = Date.now();
         }
     }
 
-    // ==== THÊM ĐOẠN ĐẾM THỜI GIAN AFK NÀY VÀO ĐÂY ====
-    if (userData.meditation && userData.meditation.active && userData.meditation.startedAt) {
-        var durMs = userData.meditation.durationMins * 60 * 1000;
-        if (now >= userData.meditation.startedAt + durMs) {
-            completeMeditation();
-        } else if (medTabActive) {
-            updateMedTimerDisplay();
+    // Kiểm tra từng viên một xem viên nào đã xong
+    for(let i = q.length - 1; i >= 0; i--) {
+        if(q[i].startedAt) {
+            var pillIdx = (q[i].pillType !== undefined) ? q[i].pillType : 0;
+            var factDur = getFactoryDuration(pillIdx) * 1000;
+            if(now >= q[i].startedAt + factDur) {
+                userData.farm.factory.completedPills[pillIdx] = (userData.farm.factory.completedPills[pillIdx] || 0) + 1;
+                q.splice(i, 1); // Xóa khỏi hàng chờ
+                needSave = true;
+            }
         }
     }
-    // =================================================
 
-    // Nếu có thay đổi trạng thái lớn mới thực hiện ghi đè LocalStorage
+    // Nếu không có nâng cấp song song, gọi viên tiếp theo trong hàng chờ chạy
+    if (!isParallel && q.length > 0 && !q[0].startedAt && needSave) {
+        q[0].startedAt = Date.now();
+    }
+
+    if(q.length < initialLength) {
+        showFarmStatus("💊 Đan Dược hoàn thành!");
+        if(farmTabActive){renderFactoryQueue();updateFarmResourceDisplay();}
+    }
+
     if (needSave) {
         userData.farm.lastSave = Date.now();
         localStorage.setItem(SAVE_KEY, JSON.stringify(userData));
@@ -1941,7 +2094,6 @@ function farmTick(){
 
     if(!farmTabActive)return;
     
-    // ... Phần còn lại của farmTick (RequestAnimationFrame update thời gian cây/lò) giữ nguyên
     requestAnimationFrame(function(){
         if(currentFarmTab==='ruong'){
             if(needRerender){renderFarmPlots();}else{
@@ -1957,18 +2109,36 @@ function farmTick(){
         if(currentFarmTab==='lo')updateFactoryTimerDisplay(Date.now());
     });
 }
+
 function updateFactoryTimerDisplay(now){
     var el=document.getElementById('factory-timer');if(!el||!userData.farm)return;
     var q=userData.farm.factory.queue;
-    if(q.length===0||!q[0].startedAt){el.textContent='--:--';el.style.color='var(--text-muted)';el.style.textShadow='none';return;}
-    var pillIdx=(q[0].pillType!==undefined)?q[0].pillType:0;
-    var dur=getFactoryDuration(pillIdx)*1000;
-    var elp=now-q[0].startedAt;
-    if(pillIdx<=1){el.style.color='var(--cyan)';el.style.textShadow='0 0 15px rgba(0,210,255,0.4)';}
-    else if(pillIdx===2){el.style.color='var(--gold)';el.style.textShadow='0 0 15px rgba(251,191,36,0.4)';}
+    if(q.length===0){el.textContent='--:--';el.style.color='var(--text-muted)';el.style.textShadow='none';return;}
+    
+    // Tìm thời gian của viên sắp hoàn thành nhất
+    var minRem = -1;
+    var displayIdx = 0;
+    
+    for(let i=0; i<q.length; i++) {
+        if(q[i].startedAt) {
+            var pIdx = (q[i].pillType!==undefined)?q[i].pillType:0;
+            var dur = getFactoryDuration(pIdx)*1000;
+            var elp = now - q[i].startedAt;
+            var rem = Math.ceil((dur - elp)/1000);
+            if(minRem === -1 || rem < minRem) {
+                minRem = rem; displayIdx = pIdx;
+            }
+        }
+    }
+    
+    if(minRem === -1) { el.textContent='--:--'; return; }
+
+    // Đổi màu tuỳ theo loại đan đang hiển thị giờ
+    if(displayIdx<=1){el.style.color='var(--cyan)';el.style.textShadow='0 0 15px rgba(0,210,255,0.4)';}
+    else if(displayIdx===2){el.style.color='var(--gold)';el.style.textShadow='0 0 15px rgba(251,191,36,0.4)';}
     else{el.style.color='var(--purple)';el.style.textShadow='0 0 20px rgba(157,78,221,0.6)';}
-    var remaining=Math.ceil((dur-elp)/1000);
-    el.textContent=remaining>0?fmt(remaining):'00:00';
+    
+    el.textContent=minRem>0?fmt(minRem):'00:00';
 }
 
 // ════════════════════════════════════════════
