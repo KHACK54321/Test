@@ -39,5 +39,8 @@ Version M0.5.3 (10/4/2026) ✅
   Chỉnh lại cơ chế afk lần 2
   Thêm nâng cấp cho afk
   Fix lỗi sikibidi 🗿
+Version SM0.5.4 (12/4/2026)
+  Neff giá tiền bán cây và số cây thu hoặc 
+  Neff giá đang 
   
   
