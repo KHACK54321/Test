@@ -9,8 +9,8 @@ var gaccessToken = null;
 
 function gapiLoaded() {
     gapi.load('client', function() {
-        gapi.client.init({}).then(function() {
-            gapi.client.load('drive', 'v3');
+        // Tải thẳng thư viện Drive v3 mà không cần qua bước init{} dễ bị lỗi
+        gapi.client.load('drive', 'v3', function() {
             gapiInited = true;
             renderGDriveSection();
         });
