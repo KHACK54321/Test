@@ -42,5 +42,14 @@ Version M0.5.3 (10/4/2026) ✅
 Version SM0.5.4 (12/4/2026)
   Neff giá tiền bán cây và số cây thu hoặc 
   Neff giá đang 
+Version B0.5.0 (15/4/2026)
+  🌟Tái cấu chúc file🌟
+  Thêm tính năng ⭐ Đánh giá cuộc sống (Daily Journal)
+  Thêm tính năng 💰 Quản lý chi tiêu
+  Thêm tính năng liên kết gmail lưu data
+  Neff kinh nghiệm từ đang
+  Nâng exp cần lên cấp
+  Fix lỗi
+  
   
   
