@@ -16,7 +16,7 @@ const realms = [
     { name:"Trúc Cơ Hậu Kì",maxExp:30000 },{ name:"Trúc Cơ Viên Mãn",maxExp:35000 },{ name:"Kết Đan Sơ Kì",maxExp:40000 },{ name:"Kết Đan Trung Kì",maxExp:50000 },{ name:"Kết Đan Hậu Kì",maxExp:60000 },{ name:"Kết Đan Viên Mãn",maxExp:70000 },
     { name:"Nguyên Anh Sơ Kì",maxExp:80000 },{ name:"Nguyên Anh Trung Kì",maxExp:900000 },{ name:"Nguyên Anh Hậu Kì",maxExp:1000000 },{ name:"Nguyên Anh Viên Mãn",maxExp:1100000 },{ name:"Hóa Thần Sơ Kì",maxExp:1200000 },{ name:"Hóa Thần Trung Kì",maxExp:1300000 },
     { name:"Hóa Thần Hậu Kì",maxExp:1400000 },{ name:"Hóa Thần Viên Mãn",maxExp:1500000 },{ name:"Anh Biến Sơ Kì",maxExp:1600000 },{ name:"Anh Biến Trung Kì",maxExp:1700000 },{ name:"Anh Biến Hậu Kì",maxExp:1800000 },{ name:"Anh Biến Viên Mãn",maxExp:1900000 },
-    { name:"Vấn Đỉnh Sơ Kỳ",maxExp:5000000 },{ name:"Vấn Đỉnh Trung Kỳ",maxExp:1000000 },{ name:"Vấn Đỉnh Hậu Kỳ",maxExp:2500000 },{ name:"Vấn Đỉnh Đại Viên Mãn",maxExp:30000000 },{ name:"Cảnh Giới Quá Độ Âm Hư",maxExp:40000000 },{ name:"Cảnh Giới Quá Độ Dương Thực",maxExp:50000000 }
+    { name:"Vấn Đỉnh Sơ Kỳ",maxExp:20000000 },{ name:"Vấn Đỉnh Trung Kỳ",maxExp:50000000 },{ name:"Vấn Đỉnh Hậu Kỳ",maxExp:150000000 },{ name:"Vấn Đỉnh Đại Viên Mãn",maxExp:500000000 },{ name:"Cảnh Giới Quá Độ Âm Hư",maxExp:1000000000 },{ name:"Cảnh Giới Quá Độ Dương Thực",maxExp:10000000000 }
 ];
 
 const CROPS = [
