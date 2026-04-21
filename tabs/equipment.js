@@ -319,8 +319,8 @@ function buyHiddenShop(type) {
         userData.pbInv.push(drop.id);
         showToast("📦 Mở ra: " + drop.name, "success");
     } else if (type === 'soul6') {
-        if(userData.tinhHoa < 5000) { showToast("Không đủ Tinh Hoa", "error"); return; }
-        userData.tinhHoa -= 5000;
+        if(userData.tinhHoa < 210000) { showToast("Không đủ Tinh Hoa", "error"); return; }
+        userData.tinhHoa -= 210000;
         
         // SỬA Ở ĐÂY: Lấy TẤT CẢ tướng 6 sao chia đều tỉ lệ (bao gồm cả Thần Nhân)
         let pool = ANIME_SOULS.filter(s => s.star === 6);
