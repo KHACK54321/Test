@@ -77,6 +77,10 @@ Version RB1.0.0 (18/4/2026)
     🐞 Khắc phục triệt để lỗi thẻ UI đè lên nhau ở Tab Nông Trại.
     🚀 Tối ưu hóa dung lượng file core.js và utils.js giúp game load nhanh hơn 40% trên các thiết bị cấu hình thấp.
     99% update:)
+Version SM1.0.01 (21/4/2026)
+  Buff exp lên cấp
+  Tăng giá rương 6 sao
+  Ngừng phát triển cho đến khi học đc skill HTML, JacaScript and CSS (Vẫn sữa thông tin nhỏ, Thêm vài thứ lặt vặt)
   
   
   
